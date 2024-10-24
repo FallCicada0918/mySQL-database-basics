@@ -3,11 +3,11 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-24 09:54:33
+ * @LastEditTime: 2024-10-24 11:05:00
  * @: 無限進步
 -->
 # MySQL数据库-作业
-## 姓名：张煜     学号2208300002
+
 # 数据库概述
 ## 1. 什么是数据库？请简要描述数据库的定义和作用。
 ### 答：
@@ -298,111 +298,197 @@ source /path/to/230705-estore.sql;
 1）查询图书表中所有图书的名称和作者
 
 ```sql
-
+mysql> use estore;
+Database changed
+mysql> SELECT name, author FROM es_book;
++-------------------------+-----------+
+| name                    | author    |
++-------------------------+-----------+
+| mysql从入门到精通       | briup     |
+| Spring                  | briup     |
+| Python                  | briup     |
+| 水浒传                  | 施耐庵    |
+| 海子诗集                | 海子      |
+| 朱自清散文集            | 朱自清    |
++-------------------------+-----------+
+6 rows in set (0.00 sec)
 ```
-
-
 
 2）查询图书表中出版社，并且保证结果不重复
 
 ```sql
-
+mysql> SELECT DISTINCT publisher FROM es_book;
++-----------------------+
+| publisher             |
++-----------------------+
+| 机械工业出版社        |
+| 上海文艺出版社        |
+| 北京教育出版社        |
++-----------------------+
+3 rows in set (0.00 sec)
 ```
-
-
 
 3）查询图书表中图书的售价大于等于30的图书名称和作者
 
 ```sql
-
+mysql> SELECT name, author FROM es_book WHERE price >= 30;
++-----------+-----------+
+| name      | author    |
++-----------+-----------+
+| 水浒传    | 施耐庵    |
++-----------+-----------+
+1 row in set (0.00 sec)
 ```
-
-
 
 4）查询图书表中出版社为"上海文艺出版社"的图书信息
 
 ```sql
-
+mysql> SELECT * FROM es_book WHERE publisher = '上海文艺出版社';
++----+--------------------+-------+--------------+-----------+-----------------------+-------+-----------+--------+-------------+
+| id | name               | cover | description  | author    | publisher             | price | store_num | status | category_id |
++----+--------------------+-------+--------------+-----------+-----------------------+-------+-----------+--------+-------------+
+|  4 | 水浒传             | NULL  | 四大名著     | 施耐庵    | 上海文艺出版社        | 38.90 |       100 |      0 |           2 |
+|  6 | 朱自清散文集       | NULL  | 当代散文     | 朱自清    | 上海文艺出版社        | 20.90 |      NULL |      0 |           3 |
++----+--------------------+-------+--------------+-----------+-----------------------+-------+-----------+--------+-------------+
+2 rows in set (0.00 sec)
 ```
-
-
 
 5）查询图书表中图书作者为"briup"并且库存数量大于0的图书名称和库存数量
 
 ```sql
-
+mysql> SELECT name, store_num FROM es_book WHERE author = 'briup' AND store_num > 0;
++-------------------------+-----------+
+| name                    | store_num |
++-------------------------+-----------+
+| mysql从入门到精通       |       100 |
+| Spring                  |       200 |
+| Python                  |       200 |
++-------------------------+-----------+
+3 rows in set (0.00 sec)
 ```
-
-
 
 6）查询图书表中库存数量为空（NULL）的图书名称。
 
 ```sql
-
+mysql> SELECT name FROM es_book WHERE store_num IS NULL;
++--------------------+
+| name               |
++--------------------+
+| 朱自清散文集       |
++--------------------+
+1 row in set (0.00 sec)
 ```
-
-
 
 7）查询图书表中名称包含关键字"入门"的图书名称和作者。
 
 ```sql
-
+mysql> SELECT name, author FROM es_book WHERE name LIKE '%入门%';
++-------------------------+--------+
+| name                    | author |
++-------------------------+--------+
+| mysql从入门到精通       | briup  |
++-------------------------+--------+
+1 row in set (0.00 sec)
 ```
-
-
 
 8）查询图书表中图书出版社在"机械工业出版社"或"北京教育出版社"的图书名称和作者
 
 ```sql
-
+mysql> SELECT name, author FROM es_book WHERE publisher IN ('机械工业出版社', '北京教育出版社');
++-------------------------+--------+
+| name                    | author |
++-------------------------+--------+
+| mysql从入门到精通       | briup  |
+| Spring                  | briup  |
+| Python                  | briup  |
+| 海子诗集                | 海子   |
++-------------------------+--------+
+4 rows in set (0.00 sec)
 ```
 
-
-
-
-
-## 运算与分页
+# 运算与分页
 
 ### **1、根据上述表及数据完成下列操作**
 
 1）查询图书表中售价最高的图书名称、作者和售价。
 
 ```sql
-
+mysql> SELECT name, author, price
+    -> FROM es_book
+    -> ORDER BY price DESC
+    -> LIMIT 1;
++-----------+-----------+-------+
+| name      | author    | price |
++-----------+-----------+-------+
+| 水浒传    | 施耐庵    | 38.90 |
++-----------+-----------+-------+
+1 row in set (0.00 sec)
 ```
-
-
-
 
 2）查询图书表中库存数量为空或售价为零的图书名称和作者。
 
 ```sql
-
+mysql> SELECT name, author
+    -> FROM es_book
+    -> WHERE store_num IS NULL OR price = 0;
++--------------------+-----------+
+| name               | author    |
++--------------------+-----------+
+| 朱自清散文集       | 朱自清    |
++--------------------+-----------+
+1 row in set (0.00 sec)
 ```
-
-
 
 3）查询图书表图书名称和作者，并且以作者升序排序，作者相同则按照书名降序排序。
 
 ```sql
-
+mysql> SELECT name, author
+    -> FROM es_book
+    -> ORDER BY author ASC, name DESC;
++-------------------------+-----------+
+| name                    | author    |
++-------------------------+-----------+
+| Spring                  | briup     |
+| Python                  | briup     |
+| mysql从入门到精通       | briup     |
+| 水浒传                  | 施耐庵    |
+| 朱自清散文集            | 朱自清    |
+| 海子诗集                | 海子      |
++-------------------------+-----------+
+6 rows in set (0.00 sec)
 ```
-
-
-
 
 4）查询图书表中价格最高的前3本图书的名称和作者
 
 ```sql
-
+mysql> SELECT name, author
+    -> FROM es_book
+    -> ORDER BY price DESC
+    -> LIMIT 3;
++-------------------------+-----------+
+| name                    | author    |
++-------------------------+-----------+
+| 水浒传                  | 施耐庵    |
+| mysql从入门到精通       | briup     |
+| Spring                  | briup     |
++-------------------------+-----------+
+3 rows in set (0.00 sec)
 ```
-
-
 
 5）查询图书表中第2页的图书名称和作者，每页显示2条记录，按照图书ID进行升序排序。
 
 ```sql
-
+mysql> SELECT name, author
+    -> FROM es_book
+    -> ORDER BY id ASC
+    -> LIMIT 2 OFFSET 2;
++-----------+-----------+
+| name      | author    |
++-----------+-----------+
+| Python    | briup     |
+| 水浒传    | 施耐庵    |
++-----------+-----------+
+2 rows in set (0.00 sec)
 ```
 
 
@@ -421,7 +507,7 @@ CREATE TABLE student_scores (
   name VARCHAR(50) NOT NULL,
   math_score INT,
   physics_score INT,
-  chemistry_score INT,
+  chemistry_score INT, 
 );
 
 -- 插入数据
@@ -454,46 +540,50 @@ VALUES
 1）查询所有学生的总成绩，如果某门成绩为 NULL，则将其视为 0
 
 ```sql
-
+SELECT name, 
+    COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0) AS total_score
+FROM student_scores;
 ```
-
-
 
 2）查询数学成绩大于等于90分的学生姓名和数学成绩
 
 ```sql
-
+SELECT name, math_score
+FROM student_scores
+WHERE math_score >= 90;
 ```
-
-
 
 3）查询物理成绩为空或化学成绩小于80分的学生姓名和对应科目的成绩
 
 ```sql
-
+SELECT name, physics_score, chemistry_score
+FROM student_scores
+WHERE physics_score IS NULL OR chemistry_score < 80;
 ```
-
-
 
 4）查询平均成绩大于等于85分的学生姓名和平均成绩，如果某门成绩为 NULL，则将其视为 0
 
 ```sql
-
+SELECT name, 
+    (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) / 3 AS average_score
+FROM student_scores
+HAVING average_score >= 85;
 ```
-
-
 
 5）查询总分最高的学生信息
 
 ```sql
-
+SELECT id, name, math_score, physics_score, chemistry_score
+FROM student_scores
+ORDER BY (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) DESC
+LIMIT 1;
 ```
 
 
 
 
 
-## 多表查询
+# 多表查询
 
 > 请已有的estore数据库中执行下列sql语句：
 
@@ -633,7 +723,7 @@ VALUES
 
 
 
-## 函数
+# 函数
 
 ### 1、请根据上述表和数据完成下列操作
 
@@ -735,7 +825,7 @@ VALUES
 
 
 
-## 子查询
+# 子查询
 
 ### 1、请根据上述表和数据使用子查询完成下列操作
 
@@ -822,7 +912,7 @@ VALUES
 
 
 
-## 数据操作
+# 数据操作
 
 > 请已有的estore数据库中执行下列sql语句：
 
@@ -970,7 +1060,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 
-## 数据定义
+# 数据定义
 
 ### 1、软件工程的流程是什么？
 
@@ -1084,7 +1174,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 
-## 事务控制
+# 事务控制
 
 ### 1、简答题
 
