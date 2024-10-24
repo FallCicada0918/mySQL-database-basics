@@ -3,7 +3,7 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-24 15:23:15
+ * @LastEditTime: 2024-10-24 20:04:08
  * @: 無限進步
 -->
 # MySQL数据库-作业
@@ -939,119 +939,269 @@ mysql> SELECT a.receiver_name, a.phone
 1）查询每个用户的注册时间，并将时间转换为年月日格式
 
 ```sql
-SELECT username, DATE_FORMAT(registration_date, '%Y-%m-%d') AS formatted_date
-FROM es_user;
+mysql> SELECT username, DATE_FORMAT(register_time, '%Y-%m-%d') AS formatted_date
+    -> FROM es_user;
++-----------+----------------+
+| username  | formatted_date |
++-----------+----------------+
+| tom       | 2023-07-04     |
+| jack      | 2023-07-04     |
+| 李小龙    | 2023-07-04     |
+| 李莫愁    | 2023-07-04     |
+| 李秋水    | 2023-07-04     |
++-----------+----------------+
+5 rows in set (0.00 sec)
+
 ```
 
 2）查询每本图书的名称和描述，同时将描述截断为前50个字符
 
-```mysql
-SELECT name, LEFT(description, 50) AS short_description
-FROM es_book;
+```sql
+mysql> SELECT name, LEFT(description, 50) AS short_description
+    -> FROM es_book;
++------------------------------+---------------------------------+
+| name                         | short_description               |
++------------------------------+---------------------------------+
+| mysql从入门到精通            | briup推荐，学习mysql必备        |
+| Spring                       | Spring学习推荐                  |
+| Python                       | python基本语法学习              |
+| 水浒传                       | 四大名著                        |
+| 海子诗集                     | 现代诗                          |
+| 朱自清散文集                 | 当代散文                        |
+| C++ Primer                   | C++语言入门教程                 |
+| JavaScript高级程序设计       | JavaScript编程指南              |
+| 数据结构与算法               | 数据结构与算法入门              |
+| 红楼梦                       | 中国古代四大名著之一            |
+| 西游记                       | 中国古代四大名著之一            |
+| 三国演义                     | 中国古代四大名著之一            |
+| 数据挖掘导论                 | 数据挖掘入门教程                |
+| 计算机网络                   | 计算机网络基础知识              |
+| 论语                         | 中国古代经典著作                |
+| 大学语文                     | 大学语文课程教材                |
++------------------------------+---------------------------------+
+16 rows in set (0.00 sec)
+
 ```
 
 3）查询每个图书的价格，同时将价格取整并添加人民币的货币符号
 
-```mysql
-SELECT name, CONCAT('￥', FLOOR(price)) AS price_with_currency
-FROM es_book;
+```sql
+mysql> SELECT name, CONCAT('￥', FLOOR(price)) AS price_with_currency
+    -> FROM es_book;
++------------------------------+---------------------+
+| name                         | price_with_currency |
++------------------------------+---------------------+
+| mysql从入门到精通            | ￥28                |
+| Spring                       | ￥28                |
+| Python                       | ￥28                |
+| 水浒传                       | ￥38                |
+| 海子诗集                     | ￥15                |
+| 朱自清散文集                 | ￥20                |
+| C++ Primer                   | ￥49                |
+| JavaScript高级程序设计       | ￥59                |
+| 数据结构与算法               | ￥39                |
+| 红楼梦                       | ￥42                |
+| 西游记                       | ￥42                |
+| 三国演义                     | ￥42                |
+| 数据挖掘导论                 | ￥49                |
+| 计算机网络                   | ￥39                |
+| 论语                         | ￥19                |
+| 大学语文                     | ￥29                |
++------------------------------+---------------------+
+16 rows in set (0.00 sec)
+
 ```
 
 4）查询每个用户的购物车中的图书总数
 
-```mysql
-SELECT user_id, SUM(num) AS total_books
-FROM es_shopcar
-GROUP BY user_id;
+```sql
+mysql> SELECT user_id, SUM(num) AS total_books
+    -> FROM es_shopcar
+    -> GROUP BY user_id;
++---------+-------------+
+| user_id | total_books |
++---------+-------------+
+|       1 |           6 |
+|       2 |           6 |
+|       3 |           5 |
+|       4 |           4 |
+|       5 |           4 |
++---------+-------------+
+5 rows in set (0.01 sec)
 ```
 
 5）查询购物车中购买图书数量大于等于5本的用户ID和图书数量，如果用户购买图书总数大于等于5本显示“满足条件”，否则显示“不满足条件”
 
-```mysql
-SELECT user_id, SUM(num) AS total_books,
-    IF(SUM(num) >= 5, '满足条件', '不满足条件') AS condition_met
-FROM es_shopcar
-GROUP BY user_id;
+```sql
+mysql> SELECT user_id, SUM(num) AS total_books,
+    ->     IF(SUM(num) >= 5, '满足条件', '不满足条件') AS condition_met
+    -> FROM es_shopcar
+    -> GROUP BY user_id;
++---------+-------------+-----------------+
+| user_id | total_books | condition_met   |
++---------+-------------+-----------------+
+|       1 |           6 | 满足条件        |
+|       2 |           6 | 满足条件        |
+|       3 |           5 | 满足条件        |
+|       4 |           4 | 不满足条件      |
+|       5 |           4 | 不满足条件      |
++---------+-------------+-----------------+
+5 rows in set (0.00 sec)
+
 ```
 
 6）查询id为1的用户的购物车中图书的总价值
 
-```mysql
-SELECT SUM(b.price * s.num) AS total_value
-FROM es_shopcar s
-JOIN es_book b ON s.book_id = b.id
-WHERE s.user_id = 1;
+```sql
+mysql> SELECT SUM(b.price * s.num) AS total_value
+    -> FROM es_shopcar s
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE s.user_id = 1;
++-------------+
+| total_value |
++-------------+
+|      139.40 |
++-------------+
+1 row in set (0.00 sec)
+
 ```
 
 7）查询购物车中购买图书的总金额，同时显示“满100元免运费”或“不满足条件”
 
-```mysql
-SELECT user_id, SUM(b.price * s.num) AS total_amount,
-    IF(SUM(b.price * s.num) >= 100, '满100元免运费', '不满足条件') AS shipping_condition
-FROM es_shopcar s
-JOIN es_book b ON s.book_id = b.id
-GROUP BY user_id;
+```sql
+mysql> SELECT user_id, SUM(b.price * s.num) AS total_amount,
+    ->     IF(SUM(b.price * s.num) >= 100, '满100元免运费', '不满足条件') AS shipping_condition
+    -> FROM es_shopcar s
+    -> JOIN es_book b ON s.book_id = b.id
+    -> GROUP BY user_id;
++---------+--------------+--------------------+
+| user_id | total_amount | shipping_condition |
++---------+--------------+--------------------+
+|       1 |       139.40 | 满100元免运费      |
+|       2 |       214.40 | 满100元免运费      |
+|       3 |       144.50 | 满100元免运费      |
+|       4 |        86.60 | 不满足条件         |
+|       5 |       166.60 | 满100元免运费      |
++---------+--------------+--------------------+
+5 rows in set (0.00 sec)
 ```
 
 8）请查询出所有书籍的销售情况，统计展示其类别，根据销售数据显示为畅销、一般、滞销三个等级（销量低于2为滞销，不低于2但低于5为一般，不低于5为畅销）
 
-```mysql
-SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
-    CASE
-        WHEN SUM(s.num) < 2 THEN '滞销'
-        WHEN SUM(s.num) < 5 THEN '一般'
-        ELSE '畅销'
-    END AS sales_status
-FROM es_shopcar s
-JOIN es_book b ON s.book_id = b.id
-JOIN es_category c ON b.category_id = c.id
-GROUP BY b.id, c.name;
+```sql
+mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
+    ->     CASE
+    ->         WHEN SUM(s.num) < 2 THEN '滞销'
+    ->         WHEN SUM(s.num) < 5 THEN '一般'
+    ->         ELSE '畅销'
+    ->     END AS sales_status
+    -> FROM es_shopcar s
+    -> JOIN es_book b ON s.book_id = b.id
+    -> JOIN es_category c ON b.category_id = c.id
+    -> GROUP BY b.id, c.name;
++------------------------------+---------------+-------------+--------------+
+| name                         | category_name | total_sales | sales_status |
++------------------------------+---------------+-------------+--------------+
+| mysql从入门到精通            | Java          |           2 | 一般         |
+| Python                       | 人工智能      |           6 | 畅销         |
+| 水浒传                       | 小说          |           5 | 畅销         |
+| Spring                       | Java          |           4 | 一般         |
+| 海子诗集                     | 诗歌          |           5 | 畅销         |
+| 朱自清散文集                 | 散文          |           1 | 滞销         |
+| C++ Primer                   | 计算机        |           1 | 滞销         |
+| JavaScript高级程序设计       | 计算机        |           1 | 滞销         |
++------------------------------+---------------+-------------+--------------+
+8 rows in set (0.00 sec)
 ```
 
 9）查询每个用户的购物车中图书的平均价格
 
-```mysql
-SELECT user_id, AVG(b.price) AS average_price
-FROM es_shopcar s
-JOIN es_book b ON s.book_id = b.id
-GROUP BY user_id;
+```sql
+mysql> SELECT user_id, AVG(b.price) AS average_price
+    -> FROM es_shopcar s
+    -> JOIN es_book b ON s.book_id = b.id
+    -> GROUP BY user_id;
++---------+---------------+
+| user_id | average_price |
++---------+---------------+
+|       1 |     23.650000 |
+|       2 |     35.100000 |
+|       3 |     28.900000 |
+|       4 |     27.400000 |
+|       5 |     42.566667 |
++---------+---------------+
+5 rows in set 
 ```
 
 10）查询购物车中被购买次数最多的图书,显示购买用户和对应的图书信息
 
-```mysql
-SELECT s.user_id, b.name, b.author, b.price, SUM(s.num) AS total_purchases
-FROM es_shopcar s
-JOIN es_book b ON s.book_id = b.id
-GROUP BY s.book_id
-ORDER BY total_purchases DESC
-LIMIT 1;
+```sql
+mysql> SELECT s.user_id, b.name, b.author, b.price, SUM(s.num) AS total_purchases
+    -> FROM es_shopcar s
+    -> JOIN es_book b ON s.book_id = b.id
+    -> GROUP BY s.user_id, b.name, b.author, b.price
+    -> ORDER BY total_purchases DESC
+    -> LIMIT 1;
++---------+--------+--------+-------+-----------------+
+| user_id | name   | author | price | total_purchases |
++---------+--------+--------+-------+-----------------+
+|       3 | Spring | briup  | 28.90 |               3 |
++---------+--------+--------+-------+-----------------+
+1 row in set (0.00 sec)
 ```
 
 11）查询每个图书分类下的图书数量和总价格，并按数量降序排序
 
-```mysql
-SELECT c.name AS category_name, COUNT(b.id) AS book_count, SUM(b.price) AS total_price
-FROM es_book b
-JOIN es_category c ON b.category_id = c.id
-GROUP BY c.id
-ORDER BY book_count DESC;
+```sql
+mysql> SELECT c.name AS category_name, COUNT(b.id) AS book_count, SUM(b.price) AS total_price
+    -> FROM es_book b
+    -> JOIN es_category c ON b.category_id = c.id
+    -> GROUP BY c.id
+    -> ORDER BY book_count DESC;
++---------------+------------+-------------+
+| category_name | book_count | total_price |
++---------------+------------+-------------+
+| 小说          |          4 |      167.60 |
+| 人工智能      |          3 |      118.70 |
+| 计算机        |          3 |      149.70 |
+| Java          |          2 |       57.80 |
+| 时政          |          2 |       49.80 |
+| 诗歌          |          1 |       15.90 |
+| 散文          |          1 |       20.90 |
++---------------+------------+-------------+
+7 rows in set (0.01 sec)
+
 ```
 
 12）查询每个图书分类下价格最低的图书名称和价格,没有图书的分类不展示,查询到的结果按照分类id升序排序
 
-```mysql
-SELECT c.id AS category_id, c.name AS category_name, b.name AS book_name, MIN(b.price) AS lowest_price
-FROM es_book b
-JOIN es_category c ON b.category_id = c.id
-GROUP BY c.id
-HAVING lowest_price IS NOT NULL
-ORDER BY c.id ASC;
+```sql
+mysql> SELECT c.id AS category_id, c.name AS category_name, b.name AS book_name, MIN(b.price) AS lowest_price
+    -> FROM es_book b
+    -> JOIN es_category c ON b.category_id = c.id
+    -> GROUP BY c.id, c.name, b.name
+    -> ORDER BY c.id ASC;
++-------------+---------------+------------------------------+--------------+
+| category_id | category_name | book_name                    | lowest_price |
++-------------+---------------+------------------------------+--------------+
+|           2 | 小说          | 三国演义                     |        42.90 |
+|           2 | 小说          | 水浒传                       |        38.90 |
+|           2 | 小说          | 红楼梦                       |        42.90 |
+|           2 | 小说          | 西游记                       |        42.90 |
+|           3 | 散文          | 朱自清散文集                 |        20.90 |
+|           4 | 诗歌          | 海子诗集                     |        15.90 |
+|           5 | 计算机        | C++ Primer                   |        49.90 |
+|           5 | 计算机        | JavaScript高级程序设计       |        59.90 |
+|           5 | 计算机        | 计算机网络                   |        39.90 |
+|           6 | Java          | mysql从入门到精通            |        28.90 |
+|           6 | Java          | Spring                       |        28.90 |
+|           7 | 人工智能      | Python                       |        28.90 |
+|           7 | 人工智能      | 数据挖掘导论                 |        49.90 |
+|           7 | 人工智能      | 数据结构与算法               |        39.90 |
+|           8 | 时政          | 大学语文                     |        29.90 |
+|           8 | 时政          | 论语                         |        19.90 |
++-------------+---------------+-
 ```
-
-
-
-
 
 # 子查询
 
@@ -1059,84 +1209,222 @@ ORDER BY c.id ASC;
 
 1）查询购物车中图书价格大于平均价格的图书名称和价格
 
-```mysql
-
+```sql
+mysql> SELECT name, price
+    -> FROM es_book
+    -> WHERE price > (SELECT AVG(price) FROM es_book);
++------------------------------+-------+
+| name                         | price |
++------------------------------+-------+
+| 水浒传                       | 38.90 |
+| C++ Primer                   | 49.90 |
+| JavaScript高级程序设计       | 59.90 |
+| 数据结构与算法               | 39.90 |
+| 红楼梦                       | 42.90 |
+| 西游记                       | 42.90 |
+| 三国演义                     | 42.90 |
+| 数据挖掘导论                 | 49.90 |
+| 计算机网络                   | 39.90 |
++------------------------------+-------+
+9 rows in set (0.00 sec)
 ```
-
-
 
 2）查询购物车中购买图书数量最多的用户信息
 
-```mysql
-
+```sql
+mysql> SELECT *
+    -> FROM es_user
+    -> WHERE id = (SELECT user_id
+    ->             FROM es_shopcar
+    ->             GROUP BY user_id
+    ->             ORDER BY SUM(num) DESC
+    ->             LIMIT 1);
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+| id | username | password | phone       | avatar | gender | status | birthday   | register_time       |
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+|  1 | tom      | 123456   | 13700010001 | 1.jpg  | 0      |      0 | 2000-12-11 | 2023-07-04 15:59:12 |
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+1 row in set (0.01 sec)
 ```
-
-
 
 3）查询购物车中购买图书数量超过5本的用户信息
 
-```mysql
-
+```sql
+mysql> SELECT *
+    -> FROM es_user
+    -> WHERE id IN (SELECT user_id
+    ->              FROM es_shopcar
+    ->              GROUP BY user_id
+    ->              HAVING SUM(num) > 5);
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+| id | username | password | phone       | avatar | gender | status | birthday   | register_time       |
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+|  1 | tom      | 123456   | 13700010001 | 1.jpg  | 0      |      0 | 2000-12-11 | 2023-07-04 15:59:12 |
+|  2 | jack     | 123456   | 13700010002 | 2.jpg  | 0      |      0 | 2001-11-11 | 2023-07-04 15:59:12 |
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+2 rows in set (0.00 sec)
 ```
-
-
 
 4）查询购物车中购买了属于“诗歌”类别的图书的用户信息
 
-```mysql
-
+```sql
+mysql> SELECT *
+    -> FROM es_user
+    -> WHERE id IN (SELECT DISTINCT s.user_id
+    ->              FROM es_shopcar s
+    ->              JOIN es_book b ON s.book_id = b.id
+    ->              JOIN es_category c ON b.category_id = c.id
+    ->              WHERE c.name = '诗歌');
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+
+| id | username  | password | phone       | avatar | gender | status | birthday   | register_time       |
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+
+|  1 | tom       | 123456   | 13700010001 | 1.jpg  | 0      |      0 | 2000-12-11 | 2023-07-04 15:59:12 |
+|  4 | 李莫愁    | 123456   | 13700010004 | 4.jpg  | 1      |      0 | 2000-11-11 | 2023-07-04 16:03:03 |
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+
+2 rows in set (0.00 sec)
 ```
-
-
 
 5）查询id为3的用户添加到购物车中的所有书籍的详细信息，包括书籍的名字、书籍的作者、书籍的描述、书籍的出版社以及书籍的价格
 
-```mysql
+```sql
+mysql> SELECT b.name, b.author, b.description, b.publisher, b.price
+    -> FROM es_book b
+    -> WHERE b.id IN (SELECT book_id
+    ->                FROM es_shopcar
+    ->                WHERE user_id = 3);
++--------+--------+--------------------------+-----------------------+-------+
+| name   | author | description              | publisher             | price |
++--------+--------+--------------------------+-----------------------+-------+
+| Spring | briup  | Spring学习推荐           | 机械工业出版社        | 28.90 |
+| Python | briup  | python基本语法学习       | 机械工业出版社        | 28.90 |
++--------+--------+--------------------------+-----------------------+-------+
+2 rows in set (0.00 sec)
 
 ```
-
-
 
 6）请查询和id为3的用户想要购买相同数量以及相同书籍的用户信息，同时显示该书籍的名字以及该书籍的购买数量
 
-```mysql
+```sql
+mysql> SELECT u.*, b.name AS book_name, s.num
+    -> FROM es_user u
+    -> JOIN es_shopcar s ON u.id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE (s.book_id, s.num) IN (SELECT book_id, num
+    ->                              FROM es_shopcar
+    ->                              WHERE user_id = 3);
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+-----------+------+
+| id | username  | password | phone       | avatar | gender | status | birthday   | register_time       | book_name | num  |
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+-----------+------+
+|  3 | 李小龙    | 123456   | 13700010003 | 3.jpg  | 0      |      0 | 2002-10-11 | 2023-07-04 15:59:12 | Spring    |    3 |
+|  1 | tom       | 123456   | 13700010001 | 1.jpg  | 0      |      0 | 2000-12-11 | 2023-07-04 15:59:12 | Python    |    2 |
+|  3 | 李小龙    | 123456   | 13700010003 | 3.jpg  | 0      |      0 | 2002-10-11 | 2023-07-04 15:59:12 | Python    |    2 |
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+-----------+------+
+3 rows in set (0.00 sec)
 
 ```
-
-
 
 7）请查询和2号用户同一天注册,并且性别相同的用户详细信息,性别展示为男和女
 
-```mysql
+```sql
+mysql> SELECT u.*,
+    ->        CASE u.gender
+    ->            WHEN 'M' THEN '男'
+    ->            WHEN 'F' THEN '女'
+    ->        END AS gender_display
+    -> FROM es_user u
+    -> WHERE u.register_time = (SELECT register_time
+    ->                          FROM es_user
+    ->                          WHERE id = 2)
+    ->   AND u.gender = (SELECT gender
+    ->                   FROM es_user
+    ->                   WHERE id = 2);
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+----------------+
+| id | username  | password | phone       | avatar | gender | status | birthday   | register_time       | gender_display |
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+----------------+
+|  1 | tom       | 123456   | 13700010001 | 1.jpg  | 0      |      0 | 2000-12-11 | 2023-07-04 15:59:12 | NULL           |
+|  2 | jack      | 123456   | 13700010002 | 2.jpg  | 0      |      0 | 2001-11-11 | 2023-07-04 15:59:12 | NULL           |
+|  3 | 李小龙    | 123456   | 13700010003 | 3.jpg  | 0      |      0 | 2002-10-11 | 2023-07-04 15:59:12 | NULL           |
++----+-----------+----------+-------------+--------+--------+--------+------------+---------------------+----------------+
+3 rows in set (0.00 sec)
 
 ```
-
-
 
 8）查询购物车中购买图书数量超过各用户购买图书的平均数量的用户信息
 
-```mysql
+```sql
+mysql> SELECT *
+    -> FROM es_user
+    -> WHERE id IN (SELECT user_id
+    ->              FROM es_shopcar
+    ->              GROUP BY user_id
+    ->              HAVING SUM(num) > (SELECT AVG(total_num)
+    ->                                 FROM (SELECT SUM(num) AS total_num
+    ->                                       FROM es_shopcar
+    ->                                       GROUP BY user_id) AS avg_num));
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+| id | username | password | phone       | avatar | gender | status | birthday   | register_time       |
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+|  1 | tom      | 123456   | 13700010001 | 1.jpg  | 0      |      0 | 2000-12-11 | 2023-07-04 15:59:12 |
+|  2 | jack     | 123456   | 13700010002 | 2.jpg  | 0      |      0 | 2001-11-11 | 2023-07-04 15:59:12 |
++----+----------+----------+-------------+--------+--------+--------+------------+---------------------+
+2 rows in set (0.00 sec)
 
 ```
-
-
 
 9）查询每个用户购物车中图书价格最高的图书信息（包括图书名称和价格）
 
-```mysql
-
+```sql
+mysql> SELECT u.id AS user_id, b.name, b.price
+    -> FROM es_user u
+    -> JOIN es_shopcar s ON u.id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE (b.price, s.user_id) IN (SELECT MAX(b.price), s.user_id
+    ->                                FROM es_shopcar s
+    ->                                JOIN es_book b ON s.book_id = b.id
+    ->                                GROUP BY s.user_id);
++---------+------------------------------+-------+
+| user_id | name                         | price |
++---------+------------------------------+-------+
+|       2 | C++ Primer                   | 49.90 |
+|       1 | mysql从入门到精通            | 28.90 |
+|       1 | Python                       | 28.90 |
+|       3 | Spring                       | 28.90 |
+|       3 | Python                       | 28.90 |
+|       5 | JavaScript高级程序设计       | 59.90 |
+|       4 | 水浒传                       | 38.90 |
++---------+------------------------------+-------+
+7 rows in set (0.00 sec)
 ```
-
-
-
 
 10）请查询出所有书籍的销售情况，统计展示其类别，根据销售数据显示为畅销、一般、滞销三个等级（销量低于2为滞销，不低于2但低于5为一般，不低于5为畅销）
 
-```mysql
+```sql
+
+mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
+    ->        CASE
+    ->            WHEN SUM(s.num) < 2 THEN '滞销'
+    ->            WHEN SUM(s.num) < 5 THEN '一般'
+    ->            ELSE '畅销'
+    ->        END AS sales_status
+    -> FROM es_shopcar s
+    -> JOIN es_book b ON s.book_id = b.id
+    -> JOIN es_category c ON b.category_id = c.id
+    -> GROUP BY b.id, c.name;
++------------------------------+---------------+-------------+--------------+
+| name                         | category_name | total_sales | sales_status |
++------------------------------+---------------+-------------+--------------+
+| mysql从入门到精通            | Java          |           2 | 一般         |
+| Python                       | 人工智能      |           6 | 畅销         |
+| 水浒传                       | 小说          |           5 | 畅销         |
+| Spring                       | Java          |           4 | 一般         |
+| 海子诗集                     | 诗歌          |           5 | 畅销         |
+| 朱自清散文集                 | 散文          |           1 | 滞销         |
+| C++ Primer                   | 计算机        |           1 | 滞销         |
+| JavaScript高级程序设计       | 计算机        |           1 | 滞销         |
++------------------------------+---------------+-------------+--------------+
+8 rows in set (0.00 sec)
 
 ```
-
-
 
 
 
@@ -1144,7 +1432,7 @@ ORDER BY c.id ASC;
 
 > 请已有的estore数据库中执行下列sql语句：
 
-```mysql
+```sql
 -- 订单表
 DROP TABLE IF EXISTS `es_order`;
 CREATE TABLE `es_order`  (
@@ -1191,97 +1479,146 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 1）在进入到杰普商城后，小明发现自己还没有账号，请帮他创建一个账号吧
 
-```mysql
+```sql
+mysql> INSERT INTO es_user (username, password, phone, avatar, gender, status, birthday, register_time)
+    -> VALUES ('xiaoming', 'password123', '13800010011', 'default.jpg', 0, 0, '2005-05-20', NOW());
+Query OK, 1 row affected (0.01 sec)
 
 ```
-
-
 
 2）创建好账号后，小明想要查看商城中都有哪些栏目，以及栏目下各书籍的信息，请帮其查找一下吧
 
-```mysql
-
+``sql
+mysql> SELECT c.name AS category_name, b.name AS book_name, b.author, b.price, b.publisher
+    -> FROM es_category c
+    -> JOIN es_book b ON c.id = b.category_id;
++---------------+------------------------------+---------------------+-------+-----------------------+
+| category_name | book_name                    | author              | price | publisher             |
++---------------+------------------------------+---------------------+-------+-----------------------+
+| Java          | mysql从入门到精通            | briup               | 28.90 | 机械工业出版社        |
+| Java          | Spring                       | briup               | 28.90 | 机械工业出版社        |
+| 人工智能      | Python                       | briup               | 28.90 | 机械工业出版社        |
+| 小说          | 水浒传                       | 施耐庵              | 38.90 | 上海文艺出版社        |
+| 诗歌          | 海子诗集                     | 海子                | 15.90 | 北京教育出版社        |
+| 散文          | 朱自清散文集                 | 朱自清              | 20.90 | 上海文艺出版社        |
+| 计算机        | C++ Primer                   | Stanley B. Lippman  | 49.90 | 机械工业出版社        |
+| 计算机        | JavaScript高级程序设计       | Nicholas C. Zakas   | 59.90 | 机械工业出版社        |
+| 人工智能      | 数据结构与算法               | Thomas H. Cormen    | 39.90 | 机械工业出版社        |
+| 小说          | 红楼梦                       | 曹雪芹              | 42.90 | 上海文艺出版社        |
+| 小说          | 西游记                       | 吴承恩              | 42.90 | 上海文艺出版社        |
+| 小说          | 三国演义                     | 罗贯中              | 42.90 | 上海文艺出版社        |
+| 人工智能      | 数据挖掘导论                 | Jiawei Han          | 49.90 | 机械工业出版社        |
+| 计算机        | 计算机网络                   | Andrew S. Tanenbaum | 39.90 | 机械工业出版社        |
+| 时政          | 论语                         | 孔子                | 19.90 | 北京教育出版社        |
+| 时政          | 大学语文                     | 佚名                | 29.90 | 北京教育出版社        |
++---------------+------------------------------+---------------------+-------+-----------------------+
+16 rows in set (0.01 sec)
 ```
-
-
 
 3）小明发现商城里书籍实在是太多了，看的他眼花缭乱的，他现在想要购买的只有计算机相关的图书，那么如何才能将计算机相关的图书找出来呢？（找出计算机类及其子类的图书）
 
-```mysql
-
+```sql
+mysql> SELECT b.name, b.author, b.price, b.publisher
+    -> FROM es_book b
+    -> JOIN es_category c ON b.category_id = c.id
+    -> WHERE c.name = '计算机' OR c.parent_id = (SELECT id FROM es_category WHERE name = '计算机');
++------------------------------+---------------------+-------+-----------------------+
+| name                         | author              | price | publisher             |
++------------------------------+---------------------+-------+-----------------------+
+| C++ Primer                   | Stanley B. Lippman  | 49.90 | 机械工业出版社        |
+| JavaScript高级程序设计       | Nicholas C. Zakas   | 59.90 | 机械工业出版社        |
+| 计算机网络                   | Andrew S. Tanenbaum | 39.90 | 机械工业出版社        |
+| mysql从入门到精通            | briup               | 28.90 | 机械工业出版社        |
+| Spring                       | briup               | 28.90 | 机械工业出版社        |
+| Python                       | briup               | 28.90 | 机械工业出版社        |
+| 数据结构与算法               | Thomas H. Cormen    | 39.90 | 机械工业出版社        |
+| 数据挖掘导论                 | Jiawei Han          | 49.90 | 机械工业出版社        |
++------------------------------+---------------------+-------+-----------------------+
+8 rows in set (0.01 sec)
 ```
-
-
 
 4）经过一番查找后，小明终于找到了计算机相关的书籍，但是小明却发现商城管理员将《数据结构与算法》这本书归于了 人工智能这一类别里面，而不是在计算机类这个类别下。小明将这一情况告知了客服，请帮助其将书籍放到合适的类别下吧
 
-```mysql
-
-```
-
+```sql
+UPDATE es_book
+SET category_id = (SELECT id FROM es_category WHERE name = '计算机')
+WHERE name = '数据结构与算法';
+``` 
 
 
 5）几经对比网上关于计算机必读书籍的推荐，小明初步确定了需要购买的书籍为 《计算机网络》、《数据结构与算法》、《操作系统》以及《计算机组成原理》；但是在购买时，发现商城中并没有《操作系统》以及《计算机组成原理》这两本书，于是他联系客服，希望能够上架这两本书。现在需要你帮助商城管理员将这两本书上架，库存各为100本
 
-```mysql
-
+```sql
+mysql> INSERT INTO es_book (name, cover, description, author, publisher, price, store_num, status, category_id)
+    -> VALUES ('操作系统', NULL, '操作系统基础知识', '某作者', '某出版社', 49.90, 100, 0, (SELECT id FROM es_category WHERE name = '计算机')),
+    ->     ('计算机组成原理', NULL, '计算机组成原理基础知识', '某作者', '某出版社', 59.90, 100, 0, (SELECT id FROM es_category WHERE name = '计算机'));
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
 ```
-
-
 
 6）在客服上架书籍后，小明立马将这几本书添加到了购物车中，请帮助小明将书籍添加到购物车吧
 
-```mysql
-
+```sql
+INSERT INTO es_shopcar (user_id, book_id, num)
+VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1),
+    (1, (SELECT id FROM es_book WHERE name = '数据结构与算法'), 1),
+    (1, (SELECT id FROM es_book WHERE name = '操作系统'), 1),
+    (1, (SELECT id FROM es_book WHERE name = '计算机组成原理'), 1);
 ```
-
-
 
 7）在看到小明为大学专业学习做准备后，同样被计算机专业录用的小刚，希望好朋友小明 利用小明的账号 帮他买一下这些专业书籍；那么如何做到给小刚购买这些书籍呢？
 
 ```mysql
-
+-- 小刚需要的书籍假设与小明相同
+INSERT INTO es_shopcar (user_id, book_id, num)
+VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1),
+    (1, (SELECT id FROM es_book WHERE name = '数据结构与算法'), 1),
+    (1, (SELECT id FROM es_book WHERE name = '操作系统'), 1),
+    (1, (SELECT id FROM es_book WHERE name = '计算机组成原理'), 1);
 ```
-
-
 
 8）确定好后，小明准备购买书籍，并且书籍寄往家里，请编写SQL语句帮助他完成购买操作吧，假定小明的用户id为1
 
 - 添加小明的收获地址
 
 ```mysql
-
+INSERT INTO es_address (receiver_name, urban_addr, detail_addr, phone, user_id)
+VALUES ('小明', '北京市海淀区', '中关村大街123号', '13800010011', 1);
 ```
 
 - 创建订单，将购物车中的图书生成一条订单记录：
 
 ```mysql
-
+INSERT INTO es_order (user_id, address_id, create_date, pay_way, tracking_number, distribution_mode, status, pay_date)
+VALUES (1, (SELECT id FROM es_address WHERE user_id = 1 AND receiver_name = '小明'), NOW(), '在线支付', NULL, '快递', 1, NULL);
 ```
 
 - 获取刚创建的订单的订单编号：
 
 ```mysql
-
+SELECT id INTO @order_id FROM es_order WHERE user_id = 1 ORDER BY create_date DESC LIMIT 1;
 ```
 
 - 将购物车中的图书信息添加到订单项表中：
 
 ```mysql
-
+INSERT INTO es_order_item (order_id, book_id, num)
+SELECT @order_id, book_id, num FROM es_shopcar WHERE user_id = 1;
 ```
 
 - 更新图书库存，将购买的图书数量从库存中减去：
 
 ```sql
-
+UPDATE es_book b
+JOIN es_shopcar s ON b.id = s.book_id
+SET b.store_num = b.store_num - s.num
+WHERE s.user_id = 1;
 ```
 
 - 更新购物车，将购物车中的图书信息删除：
 
 ```sql
--- 假设小明的购物车中只有4本书
-
+DELETE FROM es_shopcar WHERE user_id = 1;
 ```
 
 
