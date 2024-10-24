@@ -3,7 +3,7 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-24 11:05:00
+ * @LastEditTime: 2024-10-24 15:00:06
  * @: 無限進步
 -->
 # MySQL数据库-作业
@@ -527,7 +527,7 @@ VALUES
 
 数据字典：
 
-| 字段名          | 数据类型    | 约束类型    | 备注     |
+| 字段名           | 数据类型     | 约束类型    | 备注     |
 | --------------- | ----------- | ----------- | -------- |
 | id              | INT         | PRIMARY KEY | 主键     |
 | student_name    | VARCHAR(50) | NOT NULL    | 学生姓名 |
@@ -540,39 +540,91 @@ VALUES
 1）查询所有学生的总成绩，如果某门成绩为 NULL，则将其视为 0
 
 ```sql
-SELECT name, 
-    COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0) AS total_score
-FROM student_scores;
+mysql> use test
+Database changed
+mysql> SELECT name,
+    ->     COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0) AS total_score
+    -> FROM student_scores;
++---------+-------------+
+| name    | total_score |
++---------+-------------+
+| Alice   |         267 |
+| Bob     |         243 |
+| Charlie |         183 |
+| David   |         235 |
+| Emma    |         270 |
+| Frank   |         171 |
+| Grace   |         273 |
+| Henry   |         243 |
+| Ivy     |         277 |
+| Jack    |         160 |
++---------+-------------+
+10 rows in set (0.00 sec)
 ```
 
 2）查询数学成绩大于等于90分的学生姓名和数学成绩
 
 ```sql
-SELECT name, math_score
-FROM student_scores
-WHERE math_score >= 90;
+mysql> SELECT name, math_score
+    -> FROM student_scores
+    -> WHERE math_score >= 90;
++-------+------------+
+| name  | math_score |
++-------+------------+
+| Emma  |         90 |
+| Grace |         95 |
+| Ivy   |         92 |
++-------+------------+
+3 rows in set (0.00 sec)
+
 ```
 
 3）查询物理成绩为空或化学成绩小于80分的学生姓名和对应科目的成绩
 
 ```sql
-SELECT name, physics_score, chemistry_score
-FROM student_scores
-WHERE physics_score IS NULL OR chemistry_score < 80;
+mysql> SELECT name, physics_score, chemistry_score
+    -> FROM student_scores
+    -> WHERE physics_score IS NULL OR chemistry_score < 80;
++-------+---------------+-----------------+
+| name  | physics_score | chemistry_score |
++-------+---------------+-----------------+
+| David |            82 |              78 |
+| Frank |          NULL |              86 |
++-------+---------------+-----------------+
+2 rows in set (0.00 sec)
 ```
 
 4）查询平均成绩大于等于85分的学生姓名和平均成绩，如果某门成绩为 NULL，则将其视为 0
 
 ```sql
-SELECT name, 
-    (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) / 3 AS average_score
-FROM student_scores
-HAVING average_score >= 85;
+mysql> SELECT name,
+    ->     (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) / 3 AS average_score
+    -> FROM student_scores
+    -> HAVING average_score >= 85;
++-------+---------------+
+| name  | average_score |
++-------+---------------+
+| Alice |       89.0000 |
+| Emma  |       90.0000 |
+| Grace |       91.0000 |
+| Ivy   |       92.3333 |
++-------+---------------+
+4 rows in set (0.00 sec)
 ```
 
 5）查询总分最高的学生信息
 
 ```sql
+mysql> SELECT id, name, math_score, physics_score, chemistry_score
+    -> FROM student_scores
+    -> ORDER BY (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) DESC
+    -> LIMIT 1;
++----+------+------------+---------------+-----------------+
+| id | name | math_score | physics_score | chemistry_score |
++----+------+------------+---------------+-----------------+
+|  9 | Ivy  |         92 |            90 |              95 |
++----+------+------------+---------------+-----------------+
+1 row in set (0.00 sec)
 SELECT id, name, math_score, physics_score, chemistry_score
 FROM student_scores
 ORDER BY (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) DESC
