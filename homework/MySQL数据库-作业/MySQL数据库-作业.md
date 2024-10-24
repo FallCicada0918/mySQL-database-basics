@@ -1488,7 +1488,7 @@ Query OK, 1 row affected (0.01 sec)
 
 2）创建好账号后，小明想要查看商城中都有哪些栏目，以及栏目下各书籍的信息，请帮其查找一下吧
 
-``sql
+```sql
 mysql> SELECT c.name AS category_name, b.name AS book_name, b.author, b.price, b.publisher
     -> FROM es_category c
     -> JOIN es_book b ON c.id = b.category_id;
