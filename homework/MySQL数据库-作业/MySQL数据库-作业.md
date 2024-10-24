@@ -3,7 +3,7 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-24 15:00:06
+ * @LastEditTime: 2024-10-24 15:23:15
  * @: 無限進步
 -->
 # MySQL数据库-作业
@@ -697,77 +697,234 @@ VALUES
 
 ```
 
-
-
 ### **1、请根据上述表与数据完成下列操作**
 
 1）查询所有图书分类及其父分类名称
 
 ```sql
-
+mysql> use estore
+Database changed
+mysql> SELECT c1.name AS category_name, c2.name AS parent_category_name
+    -> FROM es_category c1
+    -> LEFT JOIN es_category c2 ON c1.parent_id = c2.id;
++---------------+----------------------+
+| category_name | parent_category_name |
++---------------+----------------------+
+| 文学          | NULL                 |
+| 小说          | 文学                 |
+| 散文          | 文学                 |
+| 诗歌          | 文学                 |
+| 计算机        | NULL                 |
+| Java          | 计算机               |
+| 人工智能      | 计算机               |
+| 时政          | NULL                 |
+| 经济学        | NULL                 |
+| 金融学        | 经济学               |
+| 管理学        | 经济学               |
+| 法学          | NULL                 |
+| 刑法学        | 法学                 |
+| 民法学        | 法学                 |
+| 外国语        | NULL                 |
+| 英语          | 外国语               |
+| 法语          | 外国语               |
+| 心理学        | NULL                 |
++---------------+----------------------+
+18 rows in set (0.00 sec)
 ```
-
-
 
 2） 查询图书分类为 "小说" 的图书名称、价格和出版社
 
 ```sql
-
+mysql> SELECT b.name, b.price, b.publisher
+    -> FROM es_book b
+    -> JOIN es_category c ON b.category_id = c.id
+    -> WHERE c.name = '小说';
++--------------+-------+-----------------------+
+| name         | price | publisher             |
++--------------+-------+-----------------------+
+| 水浒传       | 38.90 | 上海文艺出版社        |
+| 红楼梦       | 42.90 | 上海文艺出版社        |
+| 西游记       | 42.90 | 上海文艺出版社        |
+| 三国演义     | 42.90 | 上海文艺出版社        |
++--------------+-------+-----------------------+
+4 rows in set (0.00 sec)
 ```
-
-
 
 3） 查询下单客户ID为 4 的收货地址和购物车中的图书名称。
 
 ```sql
+mysql> SELECT a.urban_addr, a.detail_addr, b.name AS book_name
+    -> FROM es_address a
+    -> JOIN es_shopcar s ON a.user_id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE a.user_id = 4;
++-----------------------------+----------------------------+--------------+
+| urban_addr                  | detail_addr                | book_name    |
++-----------------------------+----------------------------+--------------+
+| 香港新界西荃湾区            | 德海街千色汇G031A室        | 水浒传       |
+| 香港新界西荃湾区            | 德海街千色汇G031A室        | 海子诗集     |
+| 广东省深圳市南山区          | 科技园大道123号            | 水浒传       |
+| 广东省深圳市南山区          | 科技园大道123号            | 海子诗集     |
++-----------------------------+----------------------------+--------------+
+4 rows in set (0.00 sec)
 
 ```
-
-
 
 4）查询每个用户的用户名和购物车中购买的图书名称，如果没有购物车记录，则显示图书名称为 NULL
 
 ```sql
+mysql> SELECT u.username, b.name AS book_name
+    -> FROM es_user u
+    -> LEFT JOIN es_shopcar s ON u.id = s.user_id
+    -> LEFT JOIN es_book b ON s.book_id = b.id;
++-----------+------------------------------+
+| username  | book_name                    |
++-----------+------------------------------+
+| jack      | mysql从入门到精通            |
+| jack      | Spring                       |
+| jack      | Python                       |
+| jack      | 水浒传                       |
+| jack      | C++ Primer                   |
+| tom       | mysql从入门到精通            |
+| tom       | Python                       |
+| tom       | 海子诗集                     |
+| tom       | 朱自清散文集                 |
+| 李小龙    | Spring                       |
+| 李小龙    | Python                       |
+| 李秋水    | Python                       |
+| 李秋水    | 水浒传                       |
+| 李秋水    | JavaScript高级程序设计       |
+| 李莫愁    | 水浒传                       |
+| 李莫愁    | 海子诗集                     |
++-----------+------------------------------+
+16 rows in set (0.00 sec)
 
 ```
-
-
 
 5）查询购物车中购买图书数量大于等于2本的用户及其购买的图书名称和购买数量
 
-```mysql
+```sql
+mysql> SELECT u.username, b.name AS book_name, s.num
+    -> FROM es_user u
+    -> JOIN es_shopcar s ON u.id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE s.num >= 2;
++-----------+--------------+------+
+| username  | book_name    | num  |
++-----------+--------------+------+
+| tom       | Python       |    2 |
+| jack      | 水浒传       |    2 |
+| 李小龙    | Spring       |    3 |
+| tom       | 海子诗集     |    2 |
+| 李小龙    | Python       |    2 |
+| 李莫愁    | 海子诗集     |    3 |
+| 李秋水    | 水浒传       |    2 |
++-----------+--------------+------+
+7 rows in set (0.00 sec)
 
 ```
-
-
 
 6）查询购物车中购买图书价格大于等于50的用户及其购买的图书名称和图书价格
 
 ```sql
+mysql> SELECT u.username, b.name AS book_name, b.price
+    -> FROM es_user u
+    -> JOIN es_shopcar s ON u.id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE b.price >= 50;
++-----------+------------------------------+-------+
+| username  | book_name                    | price |
++-----------+------------------------------+-------+
+| 李秋水    | JavaScript高级程序设计       | 59.90 |
++-----------+------------------------------+-------+
+1 row in set (0.00 sec)
 
 ```
-
-
 
 7）查询购物车中有图书的用户的用户姓名、收货人姓名、城市地址和详细地址
 
-```mysql
-
+```sql
+mysql> SELECT u.username, a.receiver_name, a.urban_addr, a.detail_addr
+    -> FROM es_user u
+    -> JOIN es_address a ON u.id = a.user_id
+    -> JOIN es_shopcar s ON u.id = s.user_id;
++-----------+---------------+-----------------------------------+----------------------------+
+| username  | receiver_name | urban_addr                        | detail_addr                |
++-----------+---------------+-----------------------------------+----------------------------+
+| jack      | 费俊龙        | 江苏省苏州市昆山市                | 巴城镇景城路108号          |
+| jack      | 费俊龙        | 江苏省苏州市昆山市                | 巴城镇景城路108号          |
+| jack      | 费俊龙        | 江苏省苏州市昆山市                | 巴城镇景城路108号          |
+| jack      | 费俊龙        | 江苏省苏州市昆山市                | 巴城镇景城路108号          |
+| jack      | 费俊龙        | 江苏省苏州市昆山市                | 巴城镇景城路108号          |
+| jack      | 王五          | 江苏省苏州市相城区                | 太湖大道999号              |
+| jack      | 王五          | 江苏省苏州市相城区                | 太湖大道999号              |
+| jack      | 王五          | 江苏省苏州市相城区                | 太湖大道999号              |
+| jack      | 王五          | 江苏省苏州市相城区                | 太湖大道999号              |
+| jack      | 王五          | 江苏省苏州市相城区                | 太湖大道999号              |
+| tom       | 张            | 江苏省苏州市金阊区                | 山塘街虎丘山门             |
+| tom       | 张            | 江苏省苏州市金阊区                | 山塘街虎丘山门             |
+| tom       | 张            | 江苏省苏州市金阊区                | 山塘街虎丘山门             |
+| tom       | 张            | 江苏省苏州市金阊区                | 山塘街虎丘山门             |
+| tom       | 李小龙        | 香港特别行政区九龙城区            | 砵兰街363号地下C铺         |
+| tom       | 李小龙        | 香港特别行政区九龙城区            | 砵兰街363号地下C铺         |
+| tom       | 李小龙        | 香港特别行政区九龙城区            | 砵兰街363号地下C铺         |
+| tom       | 李小龙        | 香港特别行政区九龙城区            | 砵兰街363号地下C铺         |
+| tom       | 陈七          | 北京市朝阳区                      | 建国路123号                |
+| tom       | 陈七          | 北京市朝阳区                      | 建国路123号                |
+| tom       | 陈七          | 北京市朝阳区                      | 建国路123号                |
+| tom       | 陈七          | 北京市朝阳区                      | 建国路123号                |
+| 李小龙    | 赵            | 江苏省南京市鼓楼区                | 中山南路123号              |
+| 李小龙    | 赵            | 江苏省南京市鼓楼区                | 中山南路123号              |
+| 李秋水    | 天山童姥      | 宁夏省银川市市                    | 天山缥缈峰灵鹫宫           |
+| 李秋水    | 天山童姥      | 宁夏省银川市市                    | 天山缥缈峰灵鹫宫           |
+| 李秋水    | 天山童姥      | 宁夏省银川市市                    | 天山缥缈峰灵鹫宫           |
+| 李秋水    | 杨八          | 浙江省杭州市西湖区                | 文二路888号                |
+| 李秋水    | 杨八          | 浙江省杭州市西湖区                | 文二路888号                |
+| 李秋水    | 杨八          | 浙江省杭州市西湖区                | 文二路888号                |
+| 李莫愁    | 李若彤        | 香港新界西荃湾区                  | 德海街千色汇G031A室        |
+| 李莫愁    | 李若彤        | 香港新界西荃湾区                  | 德海街千色汇G031A室        |
+| 李莫愁    | 刘六          | 广东省深圳市南山区                | 科技园大道123号            |
+| 李莫愁    | 刘六          | 广东省深圳市南山区                | 科技园大道123号            |
++-----------+---------------+-----------------------------------+----------------------------+
+34 rows in set (0.00 sec)
 ```
-
-
 
 8）请列出购买了价格大于50的图书的用户的收货人姓名、城市地址和电话号码。
 
-```mysql
-
+```sql
+mysql> SELECT a.receiver_name, a.urban_addr, a.phone
+    -> FROM es_address a
+    -> JOIN es_shopcar s ON a.user_id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> WHERE b.price > 50;
++---------------+-----------------------------+-------------+
+| receiver_name | urban_addr                  | phone       |
++---------------+-----------------------------+-------------+
+| 天山童姥      | 宁夏省银川市市              | 13800010005 |
+| 杨八          | 浙江省杭州市西湖区          | 13800010010 |
++---------------+-----------------------------+-------------+
+2 rows in set (0.00 sec)
 ```
-
-
 
 9）查询购买了属于“诗歌”类别的图书的用户的收货人姓名和电话号码
 
-```mysql
+```sql
+mysql> SELECT a.receiver_name, a.phone
+    -> FROM es_address a
+    -> JOIN es_shopcar s ON a.user_id = s.user_id
+    -> JOIN es_book b ON s.book_id = b.id
+    -> JOIN es_category c ON b.category_id = c.id
+    -> WHERE c.name = '诗歌';
++---------------+-------------+
+| receiver_name | phone       |
++---------------+-------------+
+| 张            | 13800010001 |
+| 李小龙        | 13800010002 |
+| 陈七          | 13800010009 |
+| 李若彤        | 13800010003 |
+| 刘六          | 13800010008 |
++---------------+-------------+
+5 rows in set (0.00 sec)
 
 ```
 
@@ -781,96 +938,115 @@ VALUES
 
 1）查询每个用户的注册时间，并将时间转换为年月日格式
 
-```mysql
-
+```sql
+SELECT username, DATE_FORMAT(registration_date, '%Y-%m-%d') AS formatted_date
+FROM es_user;
 ```
-
-
 
 2）查询每本图书的名称和描述，同时将描述截断为前50个字符
 
 ```mysql
-
+SELECT name, LEFT(description, 50) AS short_description
+FROM es_book;
 ```
-
-
 
 3）查询每个图书的价格，同时将价格取整并添加人民币的货币符号
 
 ```mysql
-
+SELECT name, CONCAT('￥', FLOOR(price)) AS price_with_currency
+FROM es_book;
 ```
-
-
 
 4）查询每个用户的购物车中的图书总数
 
 ```mysql
-
+SELECT user_id, SUM(num) AS total_books
+FROM es_shopcar
+GROUP BY user_id;
 ```
-
-
 
 5）查询购物车中购买图书数量大于等于5本的用户ID和图书数量，如果用户购买图书总数大于等于5本显示“满足条件”，否则显示“不满足条件”
 
 ```mysql
-
+SELECT user_id, SUM(num) AS total_books,
+    IF(SUM(num) >= 5, '满足条件', '不满足条件') AS condition_met
+FROM es_shopcar
+GROUP BY user_id;
 ```
-
-
 
 6）查询id为1的用户的购物车中图书的总价值
 
 ```mysql
-
+SELECT SUM(b.price * s.num) AS total_value
+FROM es_shopcar s
+JOIN es_book b ON s.book_id = b.id
+WHERE s.user_id = 1;
 ```
-
-
 
 7）查询购物车中购买图书的总金额，同时显示“满100元免运费”或“不满足条件”
 
 ```mysql
-
+SELECT user_id, SUM(b.price * s.num) AS total_amount,
+    IF(SUM(b.price * s.num) >= 100, '满100元免运费', '不满足条件') AS shipping_condition
+FROM es_shopcar s
+JOIN es_book b ON s.book_id = b.id
+GROUP BY user_id;
 ```
-
-
 
 8）请查询出所有书籍的销售情况，统计展示其类别，根据销售数据显示为畅销、一般、滞销三个等级（销量低于2为滞销，不低于2但低于5为一般，不低于5为畅销）
 
 ```mysql
-
+SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
+    CASE
+        WHEN SUM(s.num) < 2 THEN '滞销'
+        WHEN SUM(s.num) < 5 THEN '一般'
+        ELSE '畅销'
+    END AS sales_status
+FROM es_shopcar s
+JOIN es_book b ON s.book_id = b.id
+JOIN es_category c ON b.category_id = c.id
+GROUP BY b.id, c.name;
 ```
-
-
 
 9）查询每个用户的购物车中图书的平均价格
 
 ```mysql
-
+SELECT user_id, AVG(b.price) AS average_price
+FROM es_shopcar s
+JOIN es_book b ON s.book_id = b.id
+GROUP BY user_id;
 ```
-
-
 
 10）查询购物车中被购买次数最多的图书,显示购买用户和对应的图书信息
 
 ```mysql
-
+SELECT s.user_id, b.name, b.author, b.price, SUM(s.num) AS total_purchases
+FROM es_shopcar s
+JOIN es_book b ON s.book_id = b.id
+GROUP BY s.book_id
+ORDER BY total_purchases DESC
+LIMIT 1;
 ```
-
-
 
 11）查询每个图书分类下的图书数量和总价格，并按数量降序排序
 
 ```mysql
-
+SELECT c.name AS category_name, COUNT(b.id) AS book_count, SUM(b.price) AS total_price
+FROM es_book b
+JOIN es_category c ON b.category_id = c.id
+GROUP BY c.id
+ORDER BY book_count DESC;
 ```
-
-
 
 12）查询每个图书分类下价格最低的图书名称和价格,没有图书的分类不展示,查询到的结果按照分类id升序排序
 
 ```mysql
-
+SELECT c.id AS category_id, c.name AS category_name, b.name AS book_name, MIN(b.price) AS lowest_price
+FROM es_book b
+JOIN es_category c ON b.category_id = c.id
+GROUP BY c.id
+HAVING lowest_price IS NOT NULL
+ORDER BY c.id ASC;
 ```
 
 
