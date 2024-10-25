@@ -3,7 +3,7 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-24 20:04:08
+ * @LastEditTime: 2024-10-24 20:39:18
  * @: 無限進步
 -->
 # MySQL数据库-作业
@@ -633,8 +633,6 @@ LIMIT 1;
 
 
 
-
-
 # 多表查询
 
 > 请已有的estore数据库中执行下列sql语句：
@@ -1089,16 +1087,25 @@ mysql> SELECT user_id, SUM(b.price * s.num) AS total_amount,
 8）请查询出所有书籍的销售情况，统计展示其类别，根据销售数据显示为畅销、一般、滞销三个等级（销量低于2为滞销，不低于2但低于5为一般，不低于5为畅销）
 
 ```sql
+
+-- 选择图书名称、类别名称、总销量和销售状态
 mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
+    -- 根据总销量确定销售状态
     ->     CASE
+    -- 如果总销量小于2，则为滞销
     ->         WHEN SUM(s.num) < 2 THEN '滞销'
+    -- 如果总销量小于5，则为一般
     ->         WHEN SUM(s.num) < 5 THEN '一般'
+    -- 否则为畅销
     ->         ELSE '畅销'
     ->     END AS sales_status
+    -- 从购物车表、图书表和类别表中获取数据
     -> FROM es_shopcar s
     -> JOIN es_book b ON s.book_id = b.id
     -> JOIN es_category c ON b.category_id = c.id
+    -- 按图书ID和类别名称分组
     -> GROUP BY b.id, c.name;
+```
 +------------------------------+---------------+-------------+--------------+
 | name                         | category_name | total_sales | sales_status |
 +------------------------------+---------------+-------------+--------------+
@@ -1112,7 +1119,7 @@ mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
 | JavaScript高级程序设计       | 计算机        |           1 | 滞销         |
 +------------------------------+---------------+-------------+--------------+
 8 rows in set (0.00 sec)
-```
+
 
 9）查询每个用户的购物车中图书的平均价格
 
@@ -1540,9 +1547,11 @@ mysql> SELECT b.name, b.author, b.price, b.publisher
 4）经过一番查找后，小明终于找到了计算机相关的书籍，但是小明却发现商城管理员将《数据结构与算法》这本书归于了 人工智能这一类别里面，而不是在计算机类这个类别下。小明将这一情况告知了客服，请帮助其将书籍放到合适的类别下吧
 
 ```sql
-UPDATE es_book
-SET category_id = (SELECT id FROM es_category WHERE name = '计算机')
-WHERE name = '数据结构与算法';
+mysql> UPDATE es_book
+    -> SET category_id = (SELECT id FROM es_category WHERE name = '计算机')
+    -> WHERE name = '数据结构与算法';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
 ``` 
 
 
@@ -1559,16 +1568,18 @@ Records: 2  Duplicates: 0  Warnings: 0
 6）在客服上架书籍后，小明立马将这几本书添加到了购物车中，请帮助小明将书籍添加到购物车吧
 
 ```sql
-INSERT INTO es_shopcar (user_id, book_id, num)
-VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1),
-    (1, (SELECT id FROM es_book WHERE name = '数据结构与算法'), 1),
-    (1, (SELECT id FROM es_book WHERE name = '操作系统'), 1),
-    (1, (SELECT id FROM es_book WHERE name = '计算机组成原理'), 1);
+mysql> INSERT INTO es_shopcar (user_id, book_id, num)
+    -> VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1),
+    ->     (1, (SELECT id FROM es_book WHERE name = '数据结构与算法'), 1),
+    ->     (1, (SELECT id FROM es_book WHERE name = '操作系统'), 1),
+    ->     (1, (SELECT id FROM es_book WHERE name = '计算机组成原理'), 1);
+Query OK, 4 rows affected (0.00 sec)
+Records: 4  Duplicates: 0  Warnings: 0
 ```
 
 7）在看到小明为大学专业学习做准备后，同样被计算机专业录用的小刚，希望好朋友小明 利用小明的账号 帮他买一下这些专业书籍；那么如何做到给小刚购买这些书籍呢？
 
-```mysql
+```sql
 -- 小刚需要的书籍假设与小明相同
 INSERT INTO es_shopcar (user_id, book_id, num)
 VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1),
