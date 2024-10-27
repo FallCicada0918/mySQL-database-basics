@@ -3,7 +3,7 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-24 20:39:18
+ * @LastEditTime: 2024-10-27 16:59:14
  * @: 無限進步
 -->
 # MySQL数据库-作业
@@ -220,7 +220,7 @@ owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-mysql> DROP USER 'briup'@'%';
+mysql> DROP USER 'briup'@'%'; -- 删除用户briup
 Query OK, 0 rows affected (0.01 sec)
 ```
 
@@ -241,7 +241,7 @@ owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-mysql> DROP DATABASE IF EXISTS test;
+mysql> DROP DATABASE IF EXISTS test;  -- 删除test数据库（首先判其存在性）
 Query OK, 0 rows affected (0.01 sec)
 ```
 # 基础DQL
@@ -249,6 +249,52 @@ Query OK, 0 rows affected (0.01 sec)
 
 > sql脚本文件为230705-estore.sql文件
 > <img src=".\assets\image-20230706144244206.png" alt="image-20230706144244206" style="zoom: 40%;" />
+根据提供的SQL脚本，这里有四个主要的表，它们分别是 `es_address`、`es_book`、`es_shopcar` 和 `es_user`。下面是对每个表的具体作用的详细说明：
+
+#### es_address 表
+该表存储了用户的收货地址信息。当用户在电子商务平台上下单购买商品时，需要提供送货地址。此表包含以下字段：
+
+- `id`: 收货地址的唯一标识符。
+- `receiver_name`: 收件人的姓名。
+- `urban_addr`: 地址的省市区部分。
+- `detail_addr`: 更详细的地址描述。
+- `phone`: 收件人的联系电话。
+- `user_id`: 用户ID，关联到 `es_user` 表。
+
+#### es_book 表
+该表用于存储书籍信息。表中包含以下字段：
+
+- `id`: 图书的唯一标识符。
+- `name`: 图书的名称。
+- `cover`: 图书的封面图片路径。
+- `description`: 对图书的描述或简介。
+- `author`: 图书的作者。
+- `publisher`: 出版社名称。
+以及其他可能的字段，比如价格、库存量等，但是由于数据不完整，无法列出所有字段。
+
+#### es_shopcar 表
+这个表代表了用户的购物车。当用户选择了一本书并添加到购物车中时，会在这个表中创建一条记录。表中包含以下字段：
+
+- `id`: 购物车记录的唯一标识符。
+- `user_id`: 用户ID，关联到 `es_user` 表。
+- `book_id`: 图书ID，关联到 `es_book` 表。
+- `num`: 在购物车中该图书的数量。
+
+此外，还有一个唯一索引 `es_shopcar_uid_bid_un` 用来保证同一个用户对同一本书只能有一个购物车记录。
+
+#### es_user 表
+这是用户信息表，记录了所有注册用户的详细资料。表中包含以下字段：
+
+- `id`: 用户的唯一标识符。
+- `username`: 用户名，用于登录。
+- `password`: 密码，用于验证用户身份。
+- `phone`: 用户的电话号码。
+- `avatar`: 用户的头像图片路径。
+- `gender`: 用户的性别。
+- `status`: 用户的状态，用于标记账户是否被启用。
+- `birthday`: 用户的生日。
+- `register_time`: 用户注册的时间。
+
 
 要将 SQL 脚本导入到 MySQL 数据库中，操作步骤如下：
 
@@ -275,19 +321,19 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 3. 创建目标数据库（如果尚未存在），可以使用以下命令创建数据库：
 
 ```sql
-CREATE DATABASE estore;
+CREATE DATABASE estore; --创建数据库estore
 ```
 
 4. 选择要使用的数据库：
 
 ```sql
-USE estore;
+USE estore; -- 选择数据库estore
 ```
 
 5. 执行 SQL 脚本以导入数据。在命令行终端中，可以使用以下命令：
 
 ```sh
-source /path/to/230705-estore.sql;
+source /path/to/230705-estore.sql; -- 执行脚本
 ```
 
 6. 等待导入过程完成。
@@ -298,8 +344,11 @@ source /path/to/230705-estore.sql;
 1）查询图书表中所有图书的名称和作者
 
 ```sql
+-- 切换到estore数据库
 mysql> use estore;
 Database changed
+
+-- 查询es_book表中的书名和作者
 mysql> SELECT name, author FROM es_book;
 +-------------------------+-----------+
 | name                    | author    |
@@ -317,7 +366,11 @@ mysql> SELECT name, author FROM es_book;
 2）查询图书表中出版社，并且保证结果不重复
 
 ```sql
-mysql> SELECT DISTINCT publisher FROM es_book;
+<!-- 
+此查询从 `es_book` 表中选择所有不同的出版商名称。
+使用 `DISTINCT` 关键字确保结果集中没有重复的出版商名称。
+-->
+mysql> SELECT DISTINCT publisher FROM es_book; 
 +-----------------------+
 | publisher             |
 +-----------------------+
@@ -331,6 +384,7 @@ mysql> SELECT DISTINCT publisher FROM es_book;
 3）查询图书表中图书的售价大于等于30的图书名称和作者
 
 ```sql
+// 该SQL查询从es_book表中选择价格大于等于30的书籍的名称和作者。
 mysql> SELECT name, author FROM es_book WHERE price >= 30;
 +-----------+-----------+
 | name      | author    |
@@ -343,6 +397,9 @@ mysql> SELECT name, author FROM es_book WHERE price >= 30;
 4）查询图书表中出版社为"上海文艺出版社"的图书信息
 
 ```sql
+<!--
+    该SQL查询语句从es_book表中选择所有出版商为'上海文艺出版社'的记录。
+-->
 mysql> SELECT * FROM es_book WHERE publisher = '上海文艺出版社';
 +----+--------------------+-------+--------------+-----------+-----------------------+-------+-----------+--------+-------------+
 | id | name               | cover | description  | author    | publisher             | price | store_num | status | category_id |
@@ -356,6 +413,9 @@ mysql> SELECT * FROM es_book WHERE publisher = '上海文艺出版社';
 5）查询图书表中图书作者为"briup"并且库存数量大于0的图书名称和库存数量
 
 ```sql
+<!--
+此查询从 es_book 表中选择书名和库存数量，其中作者为 'briup' 且库存数量大于 0。
+-->
 mysql> SELECT name, store_num FROM es_book WHERE author = 'briup' AND store_num > 0;
 +-------------------------+-----------+
 | name                    | store_num |
@@ -370,6 +430,13 @@ mysql> SELECT name, store_num FROM es_book WHERE author = 'briup' AND store_num 
 6）查询图书表中库存数量为空（NULL）的图书名称。
 
 ```sql
+<!--
+ * 查询es_book表中store_num字段为空的所有书籍名称。
+ * 
+ * 该SQL语句用于从es_book表中选择store_num字段值为NULL的所有记录，并返回这些记录的name字段。
+ * 
+ * @return 返回所有store_num字段为空的书籍名称。
+ -->
 mysql> SELECT name FROM es_book WHERE store_num IS NULL;
 +--------------------+
 | name               |
@@ -382,6 +449,9 @@ mysql> SELECT name FROM es_book WHERE store_num IS NULL;
 7）查询图书表中名称包含关键字"入门"的图书名称和作者。
 
 ```sql
+<!--
+此查询从 es_book 表中选择 name 和 author 列，其中书名包含“入门”一词。
+-->
 mysql> SELECT name, author FROM es_book WHERE name LIKE '%入门%';
 +-------------------------+--------+
 | name                    | author |
@@ -540,10 +610,15 @@ VALUES
 1）查询所有学生的总成绩，如果某门成绩为 NULL，则将其视为 0
 
 ```sql
+-- 切换到test数据库
 mysql> use test
 Database changed
+
+-- 查询每个学生的总成绩，如果某门成绩为NULL，则将其视为0
 mysql> SELECT name,
+    -- 使用COALESCE函数将NULL值转换为0，并计算总成绩
     ->     COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0) AS total_score
+    -- 从student_scores表中选择数据
     -> FROM student_scores;
 +---------+-------------+
 | name    | total_score |
@@ -1581,38 +1656,85 @@ Records: 4  Duplicates: 0  Warnings: 0
 
 ```sql
 -- 小刚需要的书籍假设与小明相同
-INSERT INTO es_shopcar (user_id, book_id, num)
-VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1),
-    (1, (SELECT id FROM es_book WHERE name = '数据结构与算法'), 1),
-    (1, (SELECT id FROM es_book WHERE name = '操作系统'), 1),
-    (1, (SELECT id FROM es_book WHERE name = '计算机组成原理'), 1);
+mysql> use estore
+Database changed
+
+-- 将书籍《计算机网络》添加到购物车中，如果已存在则数量加1
+mysql> INSERT INTO es_shopcar (user_id, book_id, num)
+    -> VALUES (1, (SELECT id FROM es_book WHERE name = '计算机网络'), 1)
+    -> ON DUPLICATE KEY UPDATE num = num + 1;
+Query OK, 2 rows affected (0.01 sec)
+
+-- 将书籍《数据结构与算法》添加到购物车中，如果已存在则数量加1
+mysql> INSERT INTO es_shopcar (user_id, book_id, num)
+    -> VALUES (1, (SELECT id FROM es_book WHERE name = '数据结构与算法'), 1)
+    -> ON DUPLICATE KEY UPDATE num = num + 1;
+Query OK, 2 rows affected (0.00 sec)
+
+-- 将书籍《操作系统》添加到购物车中，如果已存在则数量加1
+mysql> INSERT INTO es_shopcar (user_id, book_id, num)
+    -> VALUES (1, (SELECT id FROM es_book WHERE name = '操作系统'), 1)
+    -> ON DUPLICATE KEY UPDATE num = num + 1;
+Query OK, 2 rows affected (0.00 sec)
+
+-- 将书籍《计算机组成原理》添加到购物车中，如果已存在则数量加1
+mysql> INSERT INTO es_shopcar (user_id, book_id, num)
+    -> VALUES (1, (SELECT id FROM es_book WHERE name = '计算机组成原理'), 1)
+    -> ON DUPLICATE KEY UPDATE num = num + 1;
+Query OK, 2 rows affected (0.01 sec)
+
 ```
 
 8）确定好后，小明准备购买书籍，并且书籍寄往家里，请编写SQL语句帮助他完成购买操作吧，假定小明的用户id为1
 
 - 添加小明的收获地址
 
-```mysql
-INSERT INTO es_address (receiver_name, urban_addr, detail_addr, phone, user_id)
-VALUES ('小明', '北京市海淀区', '中关村大街123号', '13800010011', 1);
+```sql
+mysql> INSERT INTO es_address (receiver_name, urban_addr, detail_addr, phone, user_id)
+    -> VALUES ('小明', '北京市海淀区', '中关村大街123号', '13800010011', 1);
+Query OK, 1 row affected (0.02 sec)
 ```
 
 - 创建订单，将购物车中的图书生成一条订单记录：
 
-```mysql
-INSERT INTO es_order (user_id, address_id, create_date, pay_way, tracking_number, distribution_mode, status, pay_date)
-VALUES (1, (SELECT id FROM es_address WHERE user_id = 1 AND receiver_name = '小明'), NOW(), '在线支付', NULL, '快递', 1, NULL);
+```sql
+
+-- 向订单表中插入一条新记录
+-- user_id: 用户ID，假定为1
+-- address_id: 收货地址ID，通过子查询获取用户ID为1且收货人姓名为“小明”的地址ID
+-- create_date: 创建订单时间，使用NOW()函数获取当前时间
+-- pay_way: 支付方式，设为“在线支付”
+-- tracking_number: 快递单号，初始设为NULL
+-- distribution_mode: 配送方式，设为“快递”
+-- status: 订单状态，初始设为1（已创建未支付）
+-- pay_date: 支付时间，初始设为NULL
+
+-- 查询当前的最大 id 值
+mysql> SET @maxId = (SELECT MAX(id) FROM es_order);
+Query OK, 0 rows affected (0.00 sec)
+
+-- 如果 @maxId 为 NULL，说明表中还没有任何记录，设置为 1
+mysql> SET @newId = IF(@maxId IS NULL, 1, @maxId + 1);
+Query OK, 0 rows affected (0.00 sec)
+
+-- 插入新记录
+mysql> INSERT INTO es_order (id, user_id, address_id, create_date, pay_way, tracking_number, distribution_mode, status, pay_date)
+    -> VALUES (@newId, 1, (SELECT id FROM es_address WHERE user_id = 1 AND receiver_name = '小明'), NOW(), '在线支付', NULL, '快递', 1, NULL);
+Query OK, 1 row affected (0.01 sec)
+
+
 ```
 
 - 获取刚创建的订单的订单编号：
 
-```mysql
-SELECT id INTO @order_id FROM es_order WHERE user_id = 1 ORDER BY create_date DESC LIMIT 1;
+```sql
+mysql> SELECT id INTO @order_id FROM es_order WHERE user_id = 1 ORDER BY create_date DESC LIMIT 1;
+Query OK, 1 row affected (0.00 sec)
 ```
 
 - 将购物车中的图书信息添加到订单项表中：
 
-```mysql
+```sql
 INSERT INTO es_order_item (order_id, book_id, num)
 SELECT @order_id, book_id, num FROM es_shopcar WHERE user_id = 1;
 ```
@@ -1742,8 +1864,124 @@ DELETE FROM es_shopcar WHERE user_id = 1;
 
 **请使用所学的SQL语句完成以上需求：**
 
-```mysql
+```sql
+-- 需求1：创建员工档案表
+CREATE DATABASE IF NOT EXISTS company;
+USE company;
 
+CREATE TABLE employee (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL,
+    birthday DATE NOT NULL
+);
+```
+
+需求2：插入员工数据
+
+```sql
+INSERT INTO employee (name, salary, birthday)
+VALUES
+    ('马云', 2025.33, '1973-08-12'),
+    ('李彦宏', 3209.49, '1986-07-14'),
+    ('马化腾', 1436.12, '1964-08-10');
+```
+
+需求3：添加手机号字段
+
+```sql
+ALTER TABLE employee ADD phone VARCHAR(15);
+```
+
+需求4：添加部门字段并创建部门表
+
+```sql
+CREATE TABLE department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+);
+
+ALTER TABLE employee ADD department_id INT;
+ALTER TABLE employee ADD CONSTRAINT fk_department FOREIGN KEY (department_id) REFERENCES department(id);
+```
+
+需求5：删除员工
+
+```sql
+DELETE FROM employee WHERE id = 5;
+```
+
+需求6：更新员工信息
+
+```sql
+UPDATE employee
+SET salary = salary + 200, phone = '13586705312'
+WHERE id = 17;
+```
+
+需求7：查询所有员工信息
+
+```sql
+SELECT * FROM employee;
+```
+
+需求8：查询指定员工信息
+
+```sql
+SELECT * FROM employee WHERE id = 3;
+```
+
+需求9：查询员工生日和手机号
+
+```sql
+SELECT birthday, phone FROM employee WHERE name = 'Linda';
+```
+
+需求10：查询工资在2000到5000之间的员工信息和工资在3000以上的人数
+
+```sql
+SELECT * FROM employee WHERE salary BETWEEN 2000 AND 5000;
+
+SELECT COUNT(*) FROM employee WHERE salary > 3000;
+```
+
+需求11：查询工资为1000、3000或5000的员工
+
+```sql
+SELECT * FROM employee WHERE salary IN (1000, 3000, 5000);
+```
+
+需求12：查询名字中包含字母o的员工
+
+```sql
+SELECT * FROM employee WHERE name LIKE '%o%';
+```
+
+需求13：查询手机号为空的员工
+
+```sql
+SELECT * FROM employee WHERE phone IS NULL;
+```
+
+需求14：查询市场部员工工资并排序
+
+```sql
+SELECT e.* 
+FROM employee e
+JOIN department d ON e.department_id = d.id
+WHERE d.name = 'Sales'
+ORDER BY e.salary;
+```
+
+需求15：分页查询市场部员工工资
+
+```sql
+SELECT e.* 
+FROM employee e
+JOIN department d ON e.department_id = d.id
+WHERE d.name = 'Sales'
+ORDER BY e.salary
+LIMIT 10 OFFSET 0; -- 第一页，每页10条记录
 ```
 
 
@@ -1755,73 +1993,91 @@ DELETE FROM es_shopcar WHERE user_id = 1;
 ### 1、简答题
 
 1）什么是数据库事务？简要描述事务的特性。
-
-
+#### 答：
+数据库事务是指一组操作的集合，这些操作要么全部成功，要么全部失败。事务的特性包括原子性、一致性、隔离性和持久性（ACID）。
 
 2）MySQL如何开启事务操作？
-
-
+#### 答：
+在MySQL中，可以使用`START TRANSACTION`或`BEGIN`语句开启事务操作。
 
 3）请解释数据库事务的提交和回滚操作，以及它们对数据库的影响。
-
-
+#### 答：
+提交操作（`COMMIT`）将事务中的所有操作永久保存到数据库中。回滚操作（`ROLLBACK`）撤销事务中的所有操作，使数据库恢复到事务开始前的状态。
 
 4）什么是事务的隔离级别？列举MYSQL支持的事务隔离级别，并简要描述每个级别的特点。
-
-
+#### 答：
+事务的隔离级别定义了事务之间的隔离程度。MySQL支持的事务隔离级别包括：
+- **读未提交（Read Uncommitted）**：事务可以读取未提交的数据，可能会导致脏读。
+- **读已提交（Read Committed）**：事务只能读取已提交的数据，避免了脏读，但可能会导致不可重复读。
+- **可重复读（Repeatable Read）**：事务在开始时读取的数据在整个事务过程中保持一致，避免了脏读和不可重复读，但可能会导致幻读。
+- **可串行化（Serializable）**：事务完全隔离，避免了脏读、不可重复读和幻读，但性能较低。
 
 5）请解释数据库的脏读、不可重复读和幻读问题，并说明这些问题如何通过事务隔离级别解决。
-
-
-
-
+#### 答：
+- **脏读**：一个事务读取了另一个事务未提交的数据。通过设置隔离级别为读已提交或更高可以避免。
+- **不可重复读**：一个事务在两次读取同一数据时，数据发生了变化。通过设置隔离级别为可重复读或更高可以避免。
+- **幻读**：一个事务在两次读取同一范围的数据时，数据的数量发生了变化。通过设置隔离级别为可串行化可以避免。
 
 ## 索引与视图
 
 ### 1、简答题
 
 1）什么是数据库索引？它有什么作用？
-
-
+#### 答：
+数据库索引是一种数据结构，用于快速查找和访问数据库表中的数据。索引可以提高查询性能，但会增加写操作的开销。
 
 2）解释什么是聚集索引和非聚集索引？它们有何区别？
-
-
+#### 答：
+- **聚集索引**：数据行的物理顺序与索引顺序相同。每个表只能有一个聚集索引。
+- **非聚集索引**：数据行的物理顺序与索引顺序不同。一个表可以有多个非聚集索引。
 
 3）什么是唯一索引？它与主键有何区别？
-
-
+#### 答：
+唯一索引保证索引列的值唯一。主键也是一种唯一索引，但主键列不能包含NULL值，并且一个表只能有一个主键。
 
 4）什么是复合索引？它在哪些情况下比单列索引更有用？
-
-
+#### 答：
+复合索引是包含多个列的索引。复合索引在查询条件包含多个列时比单列索引更有效。
 
 5）为什么在表的列上创建索引会提高查询性能？
-
-
+#### 答：
+索引通过减少需要扫描的数据量，提高了数据检索的速度，从而提高查询性能。
 
 6）列举创建索引的优点和缺点。
-
-
+#### 答：
+- **优点**：提高查询速度、加速排序和分组操作。
+- **缺点**：增加存储空间、降低插入、更新和删除操作的性能。
 
 7）在何种情况下应该避免创建索引？
-
-
+#### 答：
+在频繁进行插入、更新和删除操作的列上应避免创建索引，因为索引会降低这些操作的性能。
 
 8）如何选择在哪些列上创建索引？有哪些因素需要考虑？
-
-
+#### 答：
+应在经常用于查询条件、排序和分组的列上创建索引。需要考虑查询频率、数据分布和索引的维护成本。
 
 9）如何在MySQL中创建索引？列举常见的创建索引语句。
+#### 答：
+```sql
+-- 创建普通索引
+CREATE INDEX idx_name ON table_name(column_name);
 
+-- 创建唯一索引
+CREATE UNIQUE INDEX idx_name ON table_name(column_name);
 
+-- 创建复合索引
+CREATE INDEX idx_name ON table_name(column1, column2);
+```
 
 10）如何删除表的索引？列举删除索引的语句。
-
-
+#### 答：
+```sql
+-- 删除索引
+DROP INDEX idx_name ON table_name;
+```
 
 11） 什么是数据库视图？它的作用是什么？
-
+#### 答：
 
 
 12） 如何在MySQL中创建视图？列举创建视图的语句。
