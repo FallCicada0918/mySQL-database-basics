@@ -1,0 +1,188 @@
+-- 创建一张表
+-- create table emp(
+-- 	id int,
+-- 	name varchar(20),
+-- 	salary double
+-- );
+-- 插入数据 
+-- 按照默认顺序往表中插入数据，
+-- 值的顺序必须和数据表字段定义的顺序一致
+-- 字段数也要保持一致，数据类型也要保持一致
+-- values可以写成value 但是values是标准写法
+-- insert into emp value (2,'lisi',2000);
+-- insert into emp values (1,'lisi',2000);
+-- insert into emp values (3,'王五',null);
+-- 插入指定字段的数据值
+-- insert into emp (id,name) values (4,'wangwu');
+-- insert into emp (id) values (5);
+-- 插入多行数据 
+-- insert into emp values  (6,'lisi6',2000),
+-- 												(7,'lisi7',2000),
+-- 												(8,'lisi8',2000);
+
+-- insert into emp (id,name)
+-- values  (9,'lisi6'),
+-- 				(10,'lisi7'),
+-- 				(11,'lisi8');
+-- 将其他表的数据插入到当前表，如果字段一一对应，
+-- 可以不写字段名
+-- insert into emp
+-- select id,last_name,salary
+-- from s_emp
+-- where id between 12 and 15;
+-- 将其他表的数据插入到当前表（部分），
+-- 16 17 18 不插入工资
+-- insert into emp (id,name)
+-- select id,last_name
+-- from s_emp
+-- where id > 15 and id <= 18;
+-- 数据更新 
+-- 员工表3-5的工资定为2000
+-- update emp 
+-- set salary = 2000
+-- where id in (3,4,5);
+-- 员工5设置名字为 Tom 工资2500
+-- update emp 
+-- set salary = 2500,name = 'Tom'
+-- where id in (5);
+-- ！注意：更新语句如果不加where语句，
+-- ！代表更新所有数据
+-- 危险 update emp 
+-- 危险 set salary = 5000;
+-- 删除数据 
+-- ！注意：删除语句如果不加where语句，
+-- ！代表删除当前表所有数据
+-- delete from emp 
+-- where name like 'lisi_';
+-- 
+-- delete from emp 
+-- where id=1;
+-- 删除当前表的所有数据
+-- 危险 delete from emp;
+
+-- 创建一张表
+-- create table emp(
+-- 	id int ,
+-- 	name varchar(20),
+-- 	salary double
+-- );
+
+-- 创建一张student表 
+-- create table student (
+-- -- 主键约束
+-- 	id int primary key,
+-- -- 	非空约束
+-- 	name VARCHAR(100) not null,
+-- -- 	唯一性约束
+-- 	email VARCHAR(100) unique,
+-- -- 	check约束 
+-- 	gender char(1) check(gender IN('f','m')),
+-- 	age int,
+-- 	birthday date
+-- );
+-- 
+-- 插入数据验证 
+-- insert into student (id,name,email,gender)
+-- values (1,'tom','123@qq.com','f');
+-- 主键唯一验证
+-- insert into student (id,name,email,gender)
+-- values (1,'tom2','223@qq.com','f');
+-- name非空验证 
+-- insert into student (id,email,gender)
+-- values (2,'223@qq.com','f');
+-- email 唯一性验证 
+-- insert into student (id,name,email,gender)
+-- values (2,'tom2','123@qq.com','f');
+-- gender check
+-- insert into student (id,name,email,gender)
+-- values (2,'tom2','223@qq.com','m');
+-- create table student (
+-- 	id int,
+-- 	name VARCHAR(100),
+-- 	email VARCHAR(100),
+-- 	gender char(1),
+-- 	age int,
+-- 	birthday date,
+	-- 表级约束
+	/* primary key(id),
+	unique(email),
+	check(gender in ('f','m')),
+	*/
+  -- 	not null 非空约束不能声明成表级约束
+-- );
+
+-- 使用表级约束声明外键约束 
+-- 创建一个顾客表
+-- create table customer(
+-- 	id int primary key,
+-- 	name varchar(20) not null
+-- );
+-- insert into customer 
+-- values (1,'zs'),(2,'ls'),(3,'ww');
+-- 创建订单表 
+-- create table s_order (
+-- 	id int primary key,
+-- 	goods varchar(30) not null,
+-- 	customer_id int ,
+-- -- 	省略下单时间等内容
+-- -- 订单表的顾客id 关联 顾客表的id
+-- 	foreign key(customer_id) 
+-- 	references customer(id)
+-- );
+-- 添加数据 
+-- insert into s_order 
+-- values (1,'✏️',1);
+-- 添加数据时 要考虑外键约束
+-- insert into s_order 
+-- values (2,'✏️',4);
+-- 删除数据时 要考虑外键约束
+-- delete 
+-- from customer 
+-- where id = 1;
+
+-- 创建一张表test1和s_dept一模一样 
+-- create table test1
+-- as 
+-- select * from s_dept;
+-- 创建一张表test2和s_dept结构一模一样，不要数据
+-- create table test2
+-- as 
+-- select * from s_dept
+-- where 1 = 2;
+-- 创建一张表test3，
+-- 只要s_emp中的id，last_name和salary
+-- create table test3
+-- as 
+-- select id,last_name,salary
+-- from s_emp;
+
+-- 创建一张user1表 
+-- create table user1 (
+-- 	id int
+-- );
+-- 给user表添加name列 
+-- alter table user1 
+-- add name varchar(20);
+
+-- 在user表的第1列位置 插入 uid 
+-- alter table user1 
+-- add column uid int first;
+
+-- 在 id 列后面 插入 age 
+-- alter table user1 
+-- add column age int after id;
+
+-- 
+-- desc user1; 
+-- 修改字段的类型或者默认值
+-- 将uid改为 varchar 类型 默认值= 1
+-- alter table user1 
+-- modify column uid varchar(32) default '1';
+-- alter table user1 
+-- modify column uid varchar(32) default '10';
+-- 列重命名 修改字段名 
+-- alter table user1 
+-- change column age newAge int;
+-- 删除字段
+alter table user1 
+drop column newAge;
