@@ -3,27 +3,29 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 19:05:36
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-27 16:59:14
+ * @LastEditTime: 2024-10-28 19:23:55
  * @: 無限進步
 -->
+
 # MySQL数据库-作业
 
 # 数据库概述
+
 ## 1. 什么是数据库？请简要描述数据库的定义和作用。
+
 ### 答：
+
 1、数据库是“按照数据结构来组织，存储和管理数据的仓库”。
 
 2、是一个长期存储在计算机内的、有组织的、可共享的、统一管理的、大量数据的集合文件。数据库的具体体现，就是磁盘的文件或内存的一段数据。
 
 ①数据库中数据存储是有组织的结构，方便数据读取和修改等
 
-
 ②一种长期存储手段，不主动删除数据不应该消失
 
 ③数据库中数据存储是有组织的结构，方便数据读取何修
 
 ④数据库数据属于可共享的符合真正开发需求
-
 
 **作用**
 
@@ -42,7 +44,9 @@
 非关系型数据库适用于需要高性能、灵活和分布式处理的场景
 
 ## 2.	什么是关系型数据库？关系型数据库中的"关系"体现在哪些方面？
+
 ### 答：
+
 #### 关系型数据库
 
 * 数据按照类别进行存储，每个剋别存储到一个容器（表）中，表和表之间可以建立关系，可以仅从关联操作，性能相对一般。
@@ -52,25 +56,32 @@
 * 数据一致性：数据的关系和约束确保数据的一致性和完整型。例如：存储学生数据，保证身份证号唯一且不为空
 
 ## 3. 说说你对DB、DBMS、SQL的理解
+
 ### 答：
+
 #### 数据库（DB）
+
 数据库是存储数据的仓库，是一个长期存储在计算机内的、有组织的、可共享的、统一管理的、大量数据的集合文件。数据库的具体体现就是磁盘的文件或内存的一段数据。
 
 #### 数据库管理系统（DBMS）
+
 数据库管理系统是用于管理数据库的软件系统。它提供了数据定义、数据操作、数据控制等功能，确保数据的安全性、完整性和一致性。常见的数据库管理系统有MySQL、Oracle、SQL Server等。
 
 #### 结构化查询语言（SQL）
+
 SQL是一种用于管理和操作关系型数据库的标准语言。它包括数据查询、数据插入、数据更新、数据删除等操作。SQL语言具有强大的查询功能，能够方便地从数据库中检索和操作数据。
 
 ## 4.	常见的数据库对象有哪些，列出3个并简述一下其在数据库中的作用
+
 ### 答：
-| 单位名称 | 描述                              | 对比     |
-| -------- | --------------------------------- | -------- |
-| 库       | 数据库中最大的存储单位,内部储存表 |          |
-| 表       | 一类数据和实体的集合              | Java类   |
-| 行       | 一行数据,一个实体,操作最基本单位  | Java对象 |
-| 列       | 最小存储单位,代表一个属性         | 对象属性 |
-![](./Mysql数据库+aae463dd-eb19-4409-9a86-4fb7b125cd69/image%202.png)
+
+| 单位名称                                                            | 描述                              | 对比     |
+| ------------------------------------------------------------------- | --------------------------------- | -------- |
+| 库                                                                  | 数据库中最大的存储单位,内部储存表 |          |
+| 表                                                                  | 一类数据和实体的集合              | Java类   |
+| 行                                                                  | 一行数据,一个实体,操作最基本单位  | Java对象 |
+| 列                                                                  | 最小存储单位,代表一个属性         | 对象属性 |
+| ![](./Mysql数据库+aae463dd-eb19-4409-9a86-4fb7b125cd69/image%202.png) |                                   |          |
 
 1. **数据库（Database）**：数据库是存储数据的仓库，是一个长期存储在计算机内的、有组织的、可共享的、统一管理的、大量数据的集合文件。
 2. **表（Table）**：表是数据库中的数据集合，它包含行和列。行表示数据记录，列表示数据字段。
@@ -84,8 +95,11 @@ SQL是一种用于管理和操作关系型数据库的标准语言。它包括�
 10. **角色（Role）**：角色是数据库中的用户组，可以定义一组权限，用于管理数据库中的用户。
 
 ## 5. MySQL数据库有什么优点和缺点？
+
 ### 答：
+
 #### 优点：
+
 1. **开源免费**：MySQL是开源的，可以免费使用，适合中小企业和个人开发者。
 2. **跨平台支持**：MySQL支持多种操作系统，包括Windows、Linux、macOS等。
 3. **高性能**：MySQL在处理大量数据时表现出色，适合高并发的应用场景。
@@ -93,6 +107,7 @@ SQL是一种用于管理和操作关系型数据库的标准语言。它包括�
 5. **社区支持**：MySQL拥有庞大的用户社区，提供丰富的文档和技术支持。
 
 #### 缺点：
+
 1. **功能有限**：与一些商业数据库相比，MySQL在某些高级功能上有所欠缺，如复杂查询优化、数据仓库功能等。
 2. **事务处理能力较弱**：虽然MySQL支持事务处理，但在高并发、大数据量的情况下，性能可能不如其他数据库。
 3. **插件依赖**：某些功能需要通过插件实现，增加了系统的复杂性和维护成本。
@@ -101,28 +116,39 @@ SQL是一种用于管理和操作关系型数据库的标准语言。它包括�
 ## 6. 分别介绍一下什么是DQL、DML、DDL、DCL和TCL。
 
 ### DQL（Data Query Language）
-DQL是数据查询语言，用于从数据库中检索数据。最常用的DQL语句是`SELECT`，它用于查询表中的数据。
+
+DQL是数据查询语言，用于从数据库中检索数据。最常用的DQL语句是 `SELECT`，它用于查询表中的数据。
 
 ### DML（Data Manipulation Language）
-DML是数据操作语言，用于对数据库中的数据进行增、删、改操作。常用的DML语句包括`INSERT`、`UPDATE`和`DELETE`。
+
+DML是数据操作语言，用于对数据库中的数据进行增、删、改操作。常用的DML语句包括 `INSERT`、`UPDATE`和 `DELETE`。
 
 ### DDL（Data Definition Language）
-DDL是数据定义语言，用于定义和管理数据库中的对象，如表、视图、索引等。常用的DDL语句包括`CREATE`、`ALTER`和`DROP`。
+
+DDL是数据定义语言，用于定义和管理数据库中的对象，如表、视图、索引等。常用的DDL语句包括 `CREATE`、`ALTER`和 `DROP`。
 
 ### DCL（Data Control Language）
-DCL是数据控制语言，用于控制数据库用户的访问权限。常用的DCL语句包括`GRANT`和`REVOKE`。
+
+DCL是数据控制语言，用于控制数据库用户的访问权限。常用的DCL语句包括 `GRANT`和 `REVOKE`。
 
 ### TCL（Transaction Control Language）
-TCL是事务控制语言，用于管理数据库事务。常用的TCL语句包括`COMMIT`、`ROLLBACK`和`SAVEPOINT`。
+
+TCL是事务控制语言，用于管理数据库事务。常用的TCL语句包括 `COMMIT`、`ROLLBACK`和 `SAVEPOINT`。
 
 # 用户与建库
 
 ## 7.	创建一个MySQL用户briup，并给其赋予权限
+
 ### (1)	以具有足够权限的用户身份登录到 MySQL 服务器
+
 ### (2)	创建用户（briup)，并为其分配密码
+
 ### (3)	根据需要赋予用户授予用户适当的权限
+
 ### (4)	授予用户对所有数据库的全部权限
+
 #### 答：
+
 ```SQL
 C:\Users\86138>mysql -uroot -p
 Enter password: ****
@@ -177,11 +203,17 @@ mysql> show grants;
 2 rows in set (0.00 sec)
 
 ```
+
 ## 8.	创建一个数据库test，并指定其编码格式为utf8
+
 ### (1)	以具有足够权限的用户身份登录到 MySQL 服务器
+
 ### (2)	创建数据库并切换到该数据库
+
 ### (3)	切换使用 test数据库中
+
 #### 答：
+
 ```SQL
 C:\Users\86138>mysql -ufallcicada -p
 Enter password: ****
@@ -203,8 +235,11 @@ Query OK, 1 row affected, 1 warning (0.01 sec)
 mysql> use test
 Database changed
 ```
+
 ## 9.	删除briup用户。
+
 ### 答：
+
 ```SQL
 C:\Users\86138>mysql -uroot -p
 Enter password: ****
@@ -225,7 +260,9 @@ Query OK, 0 rows affected (0.01 sec)
 ```
 
 ## 10.	删除test数据库。
+
 ### 答：
+
 ```SQL
 C:\Users\86138>mysql -uroot -p
 Enter password: ****
@@ -244,14 +281,17 @@ Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 mysql> DROP DATABASE IF EXISTS test;  -- 删除test数据库（首先判其存在性）
 Query OK, 0 rows affected (0.01 sec)
 ```
+
 # 基础DQL
+
 ### 1、现有一份sql脚本，如何将其导入到MySQL数据库中
 
 > sql脚本文件为230705-estore.sql文件
-> <img src=".\assets\image-20230706144244206.png" alt="image-20230706144244206" style="zoom: 40%;" />
-根据提供的SQL脚本，这里有四个主要的表，它们分别是 `es_address`、`es_book`、`es_shopcar` 和 `es_user`。下面是对每个表的具体作用的详细说明：
+> `<img src=".\assets\image-20230706144244206.png" alt="image-20230706144244206" style="zoom: 40%;" />`
+> 根据提供的SQL脚本，这里有四个主要的表，它们分别是 `es_address`、`es_book`、`es_shopcar` 和 `es_user`。下面是对每个表的具体作用的详细说明：
 
 #### es_address 表
+
 该表存储了用户的收货地址信息。当用户在电子商务平台上下单购买商品时，需要提供送货地址。此表包含以下字段：
 
 - `id`: 收货地址的唯一标识符。
@@ -262,6 +302,7 @@ Query OK, 0 rows affected (0.01 sec)
 - `user_id`: 用户ID，关联到 `es_user` 表。
 
 #### es_book 表
+
 该表用于存储书籍信息。表中包含以下字段：
 
 - `id`: 图书的唯一标识符。
@@ -270,9 +311,10 @@ Query OK, 0 rows affected (0.01 sec)
 - `description`: 对图书的描述或简介。
 - `author`: 图书的作者。
 - `publisher`: 出版社名称。
-以及其他可能的字段，比如价格、库存量等，但是由于数据不完整，无法列出所有字段。
+  以及其他可能的字段，比如价格、库存量等，但是由于数据不完整，无法列出所有字段。
 
 #### es_shopcar 表
+
 这个表代表了用户的购物车。当用户选择了一本书并添加到购物车中时，会在这个表中创建一条记录。表中包含以下字段：
 
 - `id`: 购物车记录的唯一标识符。
@@ -283,6 +325,7 @@ Query OK, 0 rows affected (0.01 sec)
 此外，还有一个唯一索引 `es_shopcar_uid_bid_un` 用来保证同一个用户对同一本书只能有一个购物车记录。
 
 #### es_user 表
+
 这是用户信息表，记录了所有注册用户的详细资料。表中包含以下字段：
 
 - `id`: 用户的唯一标识符。
@@ -295,11 +338,9 @@ Query OK, 0 rows affected (0.01 sec)
 - `birthday`: 用户的生日。
 - `register_time`: 用户注册的时间。
 
-
 要将 SQL 脚本导入到 MySQL 数据库中，操作步骤如下：
 
 1. 确保你具有足够的权限以导入数据到目标数据库。通常，你需要具有 `CREATE` 和 `INSERT` 表的权限。可以使用 root 用户登录到数据库后导入数据。
-
 2. 打开命令行终端或使用图形界面工具（如 phpMyAdmin、Navicat 等）连接到 MySQL 数据库服务器。
 
 ```sql
@@ -337,7 +378,6 @@ source /path/to/230705-estore.sql; -- 执行脚本
 ```
 
 6. 等待导入过程完成。
-
 
 ### 2、请在上述导入的数据基础上，完成以下操作
 
@@ -561,9 +601,6 @@ mysql> SELECT name, author
 2 rows in set (0.00 sec)
 ```
 
-
-
-
 ### **2、请执行以下sql语句，完成下列要求**
 
 ```mysql
@@ -597,15 +634,13 @@ VALUES
 
 数据字典：
 
-| 字段名           | 数据类型     | 约束类型    | 备注     |
+| 字段名          | 数据类型    | 约束类型    | 备注     |
 | --------------- | ----------- | ----------- | -------- |
 | id              | INT         | PRIMARY KEY | 主键     |
 | student_name    | VARCHAR(50) | NOT NULL    | 学生姓名 |
 | math_score      | INT         |             | 数学成绩 |
 | physics_score   | INT         |             | 物理成绩 |
 | chemistry_score | INT         |             | 化学成绩 |
-
-
 
 1）查询所有学生的总成绩，如果某门成绩为 NULL，则将其视为 0
 
@@ -705,8 +740,6 @@ FROM student_scores
 ORDER BY (COALESCE(math_score, 0) + COALESCE(physics_score, 0) + COALESCE(chemistry_score, 0)) DESC
 LIMIT 1;
 ```
-
-
 
 # 多表查询
 
@@ -1001,10 +1034,6 @@ mysql> SELECT a.receiver_name, a.phone
 
 ```
 
-
-
-
-
 # 函数
 
 ### 1、请根据上述表和数据完成下列操作
@@ -1136,7 +1165,6 @@ mysql> SELECT SUM(b.price * s.num) AS total_value
 |      139.40 |
 +-------------+
 1 row in set (0.00 sec)
-
 ```
 
 7）查询购物车中购买图书的总金额，同时显示“满100元免运费”或“不满足条件”
@@ -1181,6 +1209,7 @@ mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
     -- 按图书ID和类别名称分组
     -> GROUP BY b.id, c.name;
 ```
+
 +------------------------------+---------------+-------------+--------------+
 | name                         | category_name | total_sales | sales_status |
 +------------------------------+---------------+-------------+--------------+
@@ -1194,7 +1223,6 @@ mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
 | JavaScript高级程序设计       | 计算机        |           1 | 滞销         |
 +------------------------------+---------------+-------------+--------------+
 8 rows in set (0.00 sec)
-
 
 9）查询每个用户的购物车中图书的平均价格
 
@@ -1508,8 +1536,6 @@ mysql> SELECT b.name, c.name AS category_name, SUM(s.num) AS total_sales,
 
 ```
 
-
-
 # 数据操作
 
 > 请已有的estore数据库中执行下列sql语句：
@@ -1552,8 +1578,6 @@ CREATE TABLE `es_order_item`  (
 
 SET FOREIGN_KEY_CHECKS = 1;
 ```
-
-
 
 ### 综合题
 
@@ -1627,8 +1651,7 @@ mysql> UPDATE es_book
     -> WHERE name = '数据结构与算法';
 Query OK, 0 rows affected (0.00 sec)
 Rows matched: 1  Changed: 0  Warnings: 0
-``` 
-
+```
 
 5）几经对比网上关于计算机必读书籍的推荐，小明初步确定了需要购买的书籍为 《计算机网络》、《数据结构与算法》、《操作系统》以及《计算机组成原理》；但是在购买时，发现商城中并没有《操作系统》以及《计算机组成原理》这两本书，于是他联系客服，希望能够上架这两本书。现在需要你帮助商城管理员将这两本书上架，库存各为100本
 
@@ -1754,15 +1777,9 @@ WHERE s.user_id = 1;
 DELETE FROM es_shopcar WHERE user_id = 1;
 ```
 
-
-
-
-
 # 数据定义
 
 ### 1、软件工程的流程是什么？
-
-
 
 ### 2、综合题
 
@@ -1792,35 +1809,76 @@ DELETE FROM es_shopcar WHERE user_id = 1;
   - start_date: 活动开始日期
   - end_date: 活动结束日期
 
-
-
 其中，一个客户可以有多个销售机会，一个销售机会属于一个客户。一个客户可以有多个联系人，一个联系人属于一个客户。一个市场活动可以有多个销售机会，一个销售机会属于一个市场活动。一个销售机会可以有多个联系人参与，一个联系人可以参与多个销售机会。
-
-
 
 请根据以上条件，完成下列需求：
 
 1）请画出其对应的实体-关系图（E-R），`禁止使用Navicat逆向模型`
 
- 
-
 2）请根据上述关系，创建对应的数据库与表
 
-在进行数据库创建和建表操作之前，请先确定数据库的名称。假设我们将数据库命名为`crm`，以下是创建数据库和建表的SQL语句：
+在进行数据库创建和建表操作之前，请先确定数据库的名称。假设我们将数据库命名为 `crm`，以下是创建数据库和建表的SQL语句：
 
 - 创建数据库：
 
 ```sql
+-- 创建数据库
+CREATE DATABASE crm;
 
+-- 使用数据库
+USE crm;
 ```
 
 - 建表操作：
 
 ```sql
+-- 创建客户表
+CREATE TABLE crm_customer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    address VARCHAR(255)
+);
 
+-- 创建市场活动表
+CREATE TABLE crm_activities (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    start_date DATE,
+    end_date DATE
+);
+
+-- 创建销售机会表
+CREATE TABLE crm_opportunity (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    activity_id INT,
+    source VARCHAR(100),
+    amount DECIMAL(10, 2),
+    close_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES crm_customer(id),
+    FOREIGN KEY (activity_id) REFERENCES crm_activities(id)
+);
+
+-- 创建联系人表
+CREATE TABLE crm_contact (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    name VARCHAR(100) NOT NULL,
+    title VARCHAR(100),
+    phone VARCHAR(20),
+    FOREIGN KEY (customer_id) REFERENCES crm_customer(id)
+);
+
+-- 创建销售机会与联系人关联表
+CREATE TABLE crm_opportunity_contact (
+    opportunity_id INT,
+    contact_id INT,
+    PRIMARY KEY (opportunity_id, contact_id),
+    FOREIGN KEY (opportunity_id) REFERENCES crm_opportunity(id),
+    FOREIGN KEY (contact_id) REFERENCES crm_contact(id)
+);
 ```
-
-
 
 ### 3、综合题2
 
@@ -1984,36 +2042,43 @@ ORDER BY e.salary
 LIMIT 10 OFFSET 0; -- 第一页，每页10条记录
 ```
 
-
-
-
-
 # 事务控制
 
 ### 1、简答题
 
 1）什么是数据库事务？简要描述事务的特性。
+
 #### 答：
+
 数据库事务是指一组操作的集合，这些操作要么全部成功，要么全部失败。事务的特性包括原子性、一致性、隔离性和持久性（ACID）。
 
 2）MySQL如何开启事务操作？
+
 #### 答：
-在MySQL中，可以使用`START TRANSACTION`或`BEGIN`语句开启事务操作。
+
+在MySQL中，可以使用 `START TRANSACTION`或 `BEGIN`语句开启事务操作。
 
 3）请解释数据库事务的提交和回滚操作，以及它们对数据库的影响。
+
 #### 答：
+
 提交操作（`COMMIT`）将事务中的所有操作永久保存到数据库中。回滚操作（`ROLLBACK`）撤销事务中的所有操作，使数据库恢复到事务开始前的状态。
 
 4）什么是事务的隔离级别？列举MYSQL支持的事务隔离级别，并简要描述每个级别的特点。
+
 #### 答：
+
 事务的隔离级别定义了事务之间的隔离程度。MySQL支持的事务隔离级别包括：
+
 - **读未提交（Read Uncommitted）**：事务可以读取未提交的数据，可能会导致脏读。
 - **读已提交（Read Committed）**：事务只能读取已提交的数据，避免了脏读，但可能会导致不可重复读。
 - **可重复读（Repeatable Read）**：事务在开始时读取的数据在整个事务过程中保持一致，避免了脏读和不可重复读，但可能会导致幻读。
 - **可串行化（Serializable）**：事务完全隔离，避免了脏读、不可重复读和幻读，但性能较低。
 
 5）请解释数据库的脏读、不可重复读和幻读问题，并说明这些问题如何通过事务隔离级别解决。
+
 #### 答：
+
 - **脏读**：一个事务读取了另一个事务未提交的数据。通过设置隔离级别为读已提交或更高可以避免。
 - **不可重复读**：一个事务在两次读取同一数据时，数据发生了变化。通过设置隔离级别为可重复读或更高可以避免。
 - **幻读**：一个事务在两次读取同一范围的数据时，数据的数量发生了变化。通过设置隔离级别为可串行化可以避免。
@@ -2023,41 +2088,59 @@ LIMIT 10 OFFSET 0; -- 第一页，每页10条记录
 ### 1、简答题
 
 1）什么是数据库索引？它有什么作用？
+
 #### 答：
+
 数据库索引是一种数据结构，用于快速查找和访问数据库表中的数据。索引可以提高查询性能，但会增加写操作的开销。
 
 2）解释什么是聚集索引和非聚集索引？它们有何区别？
+
 #### 答：
+
 - **聚集索引**：数据行的物理顺序与索引顺序相同。每个表只能有一个聚集索引。
 - **非聚集索引**：数据行的物理顺序与索引顺序不同。一个表可以有多个非聚集索引。
 
 3）什么是唯一索引？它与主键有何区别？
+
 #### 答：
+
 唯一索引保证索引列的值唯一。主键也是一种唯一索引，但主键列不能包含NULL值，并且一个表只能有一个主键。
 
 4）什么是复合索引？它在哪些情况下比单列索引更有用？
+
 #### 答：
+
 复合索引是包含多个列的索引。复合索引在查询条件包含多个列时比单列索引更有效。
 
 5）为什么在表的列上创建索引会提高查询性能？
+
 #### 答：
+
 索引通过减少需要扫描的数据量，提高了数据检索的速度，从而提高查询性能。
 
 6）列举创建索引的优点和缺点。
+
 #### 答：
+
 - **优点**：提高查询速度、加速排序和分组操作。
 - **缺点**：增加存储空间、降低插入、更新和删除操作的性能。
 
 7）在何种情况下应该避免创建索引？
+
 #### 答：
+
 在频繁进行插入、更新和删除操作的列上应避免创建索引，因为索引会降低这些操作的性能。
 
 8）如何选择在哪些列上创建索引？有哪些因素需要考虑？
+
 #### 答：
+
 应在经常用于查询条件、排序和分组的列上创建索引。需要考虑查询频率、数据分布和索引的维护成本。
 
 9）如何在MySQL中创建索引？列举常见的创建索引语句。
+
 #### 答：
+
 ```sql
 -- 创建普通索引
 CREATE INDEX idx_name ON table_name(column_name);
@@ -2070,27 +2153,23 @@ CREATE INDEX idx_name ON table_name(column1, column2);
 ```
 
 10）如何删除表的索引？列举删除索引的语句。
+
 #### 答：
+
 ```sql
 -- 删除索引
 DROP INDEX idx_name ON table_name;
 ```
 
 11） 什么是数据库视图？它的作用是什么？
-#### 答：
 
+#### 答：
 
 12） 如何在MySQL中创建视图？列举创建视图的语句。
 
-
-
 13） 视图是否占用存储空间？为什么？
 
-
-
 14） 视图是否可以被索引？为什么？
-
-
 
 15） 视图与表之间有何区别？它们在查询中的使用有何异同？
 
