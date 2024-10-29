@@ -3,7 +3,7 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 08:52:44
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-29 08:31:12
+ * @LastEditTime: 2024-10-29 14:33:35
  * @: 無限進步
 -->
 # 2024年秋季 - mySQL基础课用笔记
@@ -629,6 +629,15 @@ where e1.manager_id = e2.id;
 ##### 文件服务器
   类似的4GB的大的文本内容 或者图片 或者视频，我们一般会再搭建一台文件服务器去存储
 日期格式的处理 存时间戳 varchar
+
+##### Linux系统
+
+系统的root用户拥有当前主机、系统的最高权限
+
+##### MySQL用户权限
+root 用户 拥有MySQL的最高权限，所以root用户一般只允许本地登录
+##### 安全性
+各个平台的密码不要重复
 
 ### SQL
 
