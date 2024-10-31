@@ -3,8 +3,12 @@
  * @Author: FallCicada
  * @Date: 2024-10-23 08:52:44
  * @LastEditors: FallCicada
- * @LastEditTime: 2024-10-29 14:33:35
+ * @LastEditTime: 2024-10-31 08:48:06
  * @: 無限進步
+ * @root_userName: root
+ * @root_password: 9572
+ * @normal_user: fallcicada
+ * @password: 9572
 -->
 # 2024年秋季 - mySQL基础课用笔记
 ## mySQL
